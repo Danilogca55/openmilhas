@@ -30,8 +30,9 @@ def carregar_dados_reais():
     return dados
 
 @app.route('/')
-def login_page():
-    return render_template('login.html')
+def home():
+    info = carregar_dados_reais()
+    return render_template('index.html', info=info)
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -63,3 +64,4 @@ def executar_script():
 if __name__ == '__main__':
     # O Render gerencia a porta automaticamente
     app.run(debug=True)
+
