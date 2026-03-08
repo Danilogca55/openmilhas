@@ -31,8 +31,8 @@ def carregar_dados_reais():
 
 @app.route('/')
 def home():
-    info = carregar_dados_reais()
-    return render_template('index.html', info=info)
+    # Isso faz o site carregar o formulário completo direto na entrada
+    return render_template('index.html')
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -64,4 +64,5 @@ def executar_script():
 if __name__ == '__main__':
     # O Render gerencia a porta automaticamente
     app.run(debug=True)
+
 
