@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Open Milhas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --marinho: #0a192f; --dourado: #c5a059; }
+        body { 
+            background: linear-gradient(135deg, var(--marinho) 0%, #172a45 100%);
+            height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            margin: 0; font-family: 'Inter', sans-serif;
+        }
+        .login-card {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 45px; border-radius: 25px; border: 2px solid var(--dourado);
+            width: 100%; max-width: 420px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            z-index: 2;
+        }
+        .btn-gold { 
+            background: var(--dourado); color: var(--marinho); font-weight: bold; 
+            border: none; width: 100%; padding: 12px; border-radius: 10px; transition: 0.3s;
+        }
+        .btn-gold:hover { background: #a6864a; transform: scale(1.02); color: white; }
+        .footer-login { color: rgba(255,255,255,0.5); position: absolute; bottom: 20px; width: 100%; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="login-card text-center">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" width="90" class="mb-3">
+        <h2 class="fw-bold mb-1" style="color: var(--marinho);">OPEN MILHAS</h2>
+        <p class="text-muted small mb-4 text-uppercase letter-spacing">Portal de Acesso Restrito</p>
+        
+        <form action="/login" method="POST">

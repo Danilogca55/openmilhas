@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Mais Milhas | Recebimento</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f8f9fa; padding: 50px; display: flex; justify-content: center; }
+        .card { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 500px; width: 100%; }
+        .title { color: #004a61; font-size: 22px; font-weight: bold; margin-bottom: 20px; }
+        .miles-box { display: flex; border: 1px solid #eee; border-radius: 10px; padding: 15px; margin-bottom: 30px; }
+        .airline { border-right: 1px solid #eee; padding-right: 20px; color: #00a9a5; font-weight: bold; }
+        .amount { padding-left: 20px; color: #004a61; font-weight: bold; }
+        .option { margin-bottom: 25px; display: block; cursor: pointer; }
+        .price { color: #00a9a5; font-size: 26px; font-weight: bold; margin-top: 5px; margin-left: 25px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="title">03 Escolha o tipo de recebimento</div>
+        <div class="miles-box">
+            <div class="airline">Avianca</div>
+            <div class="amount">4.000 milhas</div>
+        </div>
+        <label class="option">
+            <input type="radio" name="opt" checked> <span style="color:#004a61">Recebimento antecipado</span>
+            <div class="price">R$ 600,00</div>
+        </label>
+        <label class="option">
+            <input type="radio" name="opt"> <span style="color:#004a61">Recebimento programado</span>
+            <div class="price">R$ 690,00</div>
+        </label>
+    </div>
+</body>
+</html>

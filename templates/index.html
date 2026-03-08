@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Milhas | Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { --marinho: #0a192f; --dourado: #c5a059; --dourado-hover: #a6864a; }
+        body { background-color: #f8f9fa; font-family: 'Inter', sans-serif; color: var(--marinho); margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        
+        /* Navbar e Footer */
+        .navbar, .footer { background-color: var(--marinho) !important; border-top: 3px solid var(--dourado); color: white; }
+        .navbar { border-top: none; border-bottom: 3px solid var(--dourado); padding: 15px 0; }
+        
+        .hero { 
+            background: linear-gradient(135deg, #0a192f 0%, #172a45 100%); 
+            color: white; padding: 60px 0 100px; text-align: center; 
+            border-bottom: 4px solid var(--dourado); border-radius: 0 0 30px 30px;
+        }
+
+        .card-executive { 
+            background: white; border-radius: 20px; padding: 30px; margin-top: -60px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid rgba(197, 160, 89, 0.2);
+        }
+
+        .btn-gold { background: var(--dourado); color: var(--marinho); font-weight: bold; border: none; padding: 12px 30px; border-radius: 10px; transition: 0.3s; }
+        .btn-gold:hover { background: var(--dourado-hover); transform: scale(1.02); color: white; }
+        
+        main { flex: 1; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" width="45" height="45" class="me-2">
+                OPEN MILHAS
+            </a>
+            <div class="ms-auto">
+                <a href="/vendas" class="btn btn-outline-warning btn-sm me-2"><i class="fa-solid fa-cart-shopping"></i> Minhas Vendas</a>
+                <a href="/" class="text-white text-decoration-none small"><i class="fa-solid fa-right-from-bracket"></i> Sair</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <h1 style="color: var(--dourado);">Executive Dashboard</h1>
+            <p class="opacity-75">Bem-vindo, {{ info.usuario }} | Sistema de Inteligência Ativo</p>
+        </div>
+    </header>
+
+    <main class="container mb-5">
+        <div class="card-executive">
+            <div class="row text-center g-4 mb-5">
+                <div class="col-md-4 border-end">
+                    <small class="text-muted fw-bold">SALDO DE MILHAS</small>
+                    <h2 class="fw-bold">{{ info.saldo_milhas }}</h2>
+                </div>
+                <div class="col-md-4 border-end">
+                    <small class="text-muted fw-bold">VALOR EM CONTA</small>
+                    <h2 class="fw-bold" style="color: var(--dourado);">R$ {{ info.lucro_estimado }}</h2>
+                </div>
+                <div class="col-md-4">
+                    <small class="text-muted fw-bold">CATEGORIA</small>
+                    <h2 class="fw-bold">{{ info.status }}</h2>
+                </div>
+            </div>
+            
+            <h5 class="text-center mb-4"><i class="fa-solid fa-chart-column me-2"></i>Evolução de Ganhos</h5>
+            <canvas id="lucroChart" style="max-height: 250px;"></canvas>
+
+            <div class="text-center mt-5">
+                <form action="/executar_script" method="POST">
+                    <button type="submit" class="btn btn-gold">
+                        <i class="fa-solid fa-play me-2"></i>SINCRONIZAR DADOS BANCÁRIOS
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer p-4 text-center">
+        <div class="container">
+            <p class="mb-0">© 2026 <strong>Open Milhas</strong> - Todos os direitos reservados.</p>
+            <small class="opacity-50 text-white">Tecnologia de ponta em monitoramento de milhas aéreas.</small>
+        </div>
+    </footer>
+
+    <script>
+        const ctx = document.getElementById('lucroChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ meses|tojson }},
+                datasets: [{
+                    label: 'Lucro (R$)',
+                    data: {{ lucros|tojson }},
+                    backgroundColor: '#c5a059',
+                    borderRadius: 8
+                }]
+            },
+            options: { plugins: { legend: { display: false } } }
+        });
+    </script>
+</body>
+</html>
