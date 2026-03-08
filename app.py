@@ -5,14 +5,14 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    # Criamos um "info" básico para o site não travar ao carregar o HTML
+    # Criamos o objeto 'info' para o HTML não dar erro 500
     info = {
         "usuario": "Danilo"
     }
     return render_template('index.html', info=info)
 
 if __name__ == '__main__':
-    # Configuração obrigatória para o Render não dar erro 500
+    # Configuração necessária para o Render
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
 
