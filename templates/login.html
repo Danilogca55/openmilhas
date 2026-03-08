@@ -29,8 +29,9 @@
 </head>
 <body>
     <div class="login-card text-center">
-        <img src="{{ url_for('static', filename='img/logo.png') }}" width="90" class="mb-3">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
         <h2 class="fw-bold mb-1" style="color: var(--marinho);">OPEN MILHAS</h2>
         <p class="text-muted small mb-4 text-uppercase letter-spacing">Portal de Acesso Restrito</p>
         
+
         <form action="/login" method="POST">
