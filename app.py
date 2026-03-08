@@ -5,19 +5,21 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    # Criamos um objeto 'info' completo para garantir que nenhum campo no HTML fique vazio e cause erro 500
+    # Dados básicos para o site não quebrar
     info = {
         "usuario": "Danilo",
-        "saldo": "0,00",
+        "saldo": "R$ 0,00",
         "milhas": "0",
         "status": "Ativo"
     }
-    # Passamos o dicionário 'info' para o HTML
-    return render_template('index.html', info=info)
+    # ESTAS DUAS LINHAS ABAIXO RESOLVEM O ERRO DO LOG:
+    meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"]
+    dados = [0, 0, 0, 0, 0, 0]
+    
+    return render_template('index.html', info=info, meses=meses, dados=dados)
 
 if __name__ == '__main__':
-    # Configuração de porta para o Render
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 10000))
     app.run(host='0.0.0.0', port=port)
 
 
