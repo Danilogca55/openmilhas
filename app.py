@@ -31,7 +31,7 @@ def carregar_dados_reais():
 
 @app.route('/')
 def home():
-    # Isso faz o site carregar o formulário completo direto na entrada
+    # Isso garante que a página abra mesmo se não houver dados ainda
     return render_template('index.html')
 
 @app.route('/login', methods=['POST'])
@@ -64,5 +64,6 @@ def executar_script():
 if __name__ == '__main__':
     # O Render gerencia a porta automaticamente
     app.run(debug=True)
+
 
 
