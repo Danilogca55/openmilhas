@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for
 import os
 
 app = Flask(__name__)
@@ -9,7 +9,8 @@ USER_DB = {"admin": "1234"}
 
 def carregar_dados_reais():
     """Lê as informações do arquivo de dados na pasta do projeto"""
-    caminho_arquivo = 'dados_bancarios'
+    # Usamos o caminho relativo para funcionar no servidor do Render
+    caminho_arquivo = os.path.join(os.path.dirname(__file__), 'dados_bancarios')
     dados = {
         "usuario": "Danilo",
         "saldo_milhas": "0",
@@ -50,4 +51,15 @@ def dashboard():
 
 @app.route('/vendas')
 def vendas():
-    return render_template('vendas.html
+    # Corrigido: Fechando as aspas e o parêntese para evitar o erro de Status 1
+    return render_template('vendas.html')
+
+@app.route('/executar_script', methods=['POST'])
+def executar_script():
+    # Rota para o botão de automação
+    print("Iniciando script de coleta...")
+    return redirect(url_for('dashboard'))
+
+if __name__ == '__main__':
+    # O Render gerencia a porta automaticamente
+    app.run(debug=True)
