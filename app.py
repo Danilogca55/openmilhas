@@ -1,13 +1,12 @@
 import os
 import sqlite3
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
 def init_db():
     conn = sqlite3.connect('dados_bancarios.db')
     cursor = conn.cursor()
-    # Cria a tabela com todas as colunas necessárias para os 5 passos
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS usuarios (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -43,8 +42,7 @@ def login():
     conn.commit()
     conn.close()
     
-    # Redireciona para a nova página de sucesso
-    return redirect('/sucesso')
+    return redirect(url_for('sucesso'))
 
 @app.route('/sucesso')
 def sucesso():
