@@ -8,15 +8,18 @@
 </head>
 <body class="bg-light">
     <div class="container py-5 text-center">
-        <div class="card border-0 shadow p-5 mx-auto" style="max-width: 500px; border-radius: 25px;">
-            <i class="fas fa-check-circle text-success mb-4" style="font-size: 5rem;"></i>
-            <h2 class="fw-bold">Venda Concluída!</h2>
-            <p class="text-muted">Seu pedido foi enviado para nossa central de processamento. O valor será creditado via PIX em até 30 minutos.</p>
-            <div class="bg-light p-3 rounded mb-4">
-                <small class="text-muted d-block">Protocolo da Transação:</small>
-                <strong class="text-primary">#OM-{{ range(10000, 99999) | random }}</strong>
+        <div class="card border-0 shadow-lg p-5 mx-auto" style="max-width: 500px; border-radius: 30px;">
+            <div class="mb-4">
+                <i class="fas fa-check-circle text-success" style="font-size: 6rem;"></i>
             </div>
-            <a href="/" class="btn btn-outline-primary rounded-pill">Voltar ao Início</a>
+            <h2 class="fw-bold mb-3">Milhas vendidas com sucesso!</h2>
+            <p class="text-muted">Sua solicitação foi processada. O valor será creditado em sua conta em até 24 horas úteis.</p>
+            
+            <div class="alert alert-info border-0 small mt-4">
+                <i class="fas fa-envelope me-2"></i> <strong>Fique atento:</strong> Você receberá uma notificação detalhada em seu e-mail em instantes.
+            </div>
+            
+            <a href="/" class="btn btn-primary rounded-pill w-100 mt-3">Voltar ao Início</a>
         </div>
     </div>
 </body>
