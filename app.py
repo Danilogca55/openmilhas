@@ -4,7 +4,6 @@ from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
-# Banco de dados ultraleve
 def init_db():
     try:
         conn = sqlite3.connect('dados_bancarios.db')
